@@ -26,7 +26,7 @@ const navItems: { icon: string; label: View; group: "workspace" | "system" }[] =
   { icon: "↑", label: "Payables", group: "workspace" },
   { icon: "▥", label: "Reports", group: "workspace" },
   { icon: "◫", label: "Masters", group: "system" },
-  { icon: "⇧", label: "Migration", group: "system" },
+  { icon: "⇧", label: "Migration", group: "workspace" },
   { icon: "⚙", label: "Settings", group: "system" },
 ];
 
@@ -120,14 +120,18 @@ export function CKJSApp() {
   return (
     <main className="app-shell">
       <aside className={`sidebar ${sidebarOpen ? "is-open" : ""}`}>
-        <div className="brand"><div className="brand-mark">CK</div><div><strong>CKJS Finance</strong><span>Financial System</span></div></div>
-        <nav aria-label="Navigasi utama">
-          <p className="nav-label">WORKSPACE</p>
+        <div className="brand"><div className="brand-word">CKJS Finance</div></div>
+        <nav className="sidebar-nav" aria-label="Navigasi utama">
           {navItems.filter((item) => item.group === "workspace").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><span className="nav-symbol">{item.icon}</span>{item.label}</button>)}
-          <p className="nav-label nav-label-space">SYSTEM</p>
-          {navItems.filter((item) => item.group === "system").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><span className="nav-symbol">{item.icon}</span>{item.label}</button>)}
         </nav>
-        <div className="user-card"><div className="avatar">JI</div><div><strong>Jason Ibrahim</strong><span>Owner / Director</span></div><button aria-label="Menu akun" type="button">•••</button></div>
+        <section className="sidebar-projects" aria-label="Proyek aktif">
+          <div className="sidebar-section-head"><strong>Projects</strong><button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" type="button">＋</button></div>
+          {projectRows.slice(0, 3).map((project) => <button className={`project-shortcut ${selectedProject?.name === project.name ? "active" : ""}`} onClick={() => { setView("Projects"); setSelectedProject(project); setSidebarOpen(false); }} key={project.name} type="button"><i style={{ background: project.color }} />{project.name}</button>)}
+        </section>
+        <div className="sidebar-footer">
+          {navItems.filter((item) => item.group === "system").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><span className="nav-symbol">{item.icon}</span>{item.label}</button>)}
+          <button className="nav-item help-item" onClick={() => notify("Pusat bantuan CKJS siap membantu Anda.")} type="button"><span className="nav-symbol">?</span>Help &amp; Support<span className="help-badge">2</span></button>
+        </div>
       </aside>
 
       <section className="content-shell">
