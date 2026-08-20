@@ -13,17 +13,16 @@ async function render() {
   );
 }
 
-test("server-renders CKJS Finance application shell", async () => {
+test("server-renders CKJS Finance login shell", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<title>CKJS Finance/);
-  assert.match(html, /Good Evening! Jason,/);
-  assert.match(html, /Search or type a command/);
-  assert.match(html, /Projects In-progress/);
+  assert.match(html, /Welcome back/);
+  assert.match(html, /jason@ckjs\.co\.id/);
   assert.match(html, /CV\. Cipta Karya Jaya Sentosa/);
-  assert.match(html, /New Transaction/);
+  assert.match(html, /Sign in/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/);
 });
