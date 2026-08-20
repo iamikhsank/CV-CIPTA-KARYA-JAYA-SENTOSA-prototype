@@ -1,15 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Book01Icon from "@hugeicons/core-free-icons/Book01Icon";
 import Chart01Icon from "@hugeicons/core-free-icons/Chart01Icon";
 import DashboardSquare01Icon from "@hugeicons/core-free-icons/DashboardSquare01Icon";
 import Folder01Icon from "@hugeicons/core-free-icons/Folder01Icon";
 import HelpCircleIcon from "@hugeicons/core-free-icons/HelpCircleIcon";
+import HourglassIcon from "@hugeicons/core-free-icons/HourglassIcon";
+import CheckmarkCircle02Icon from "@hugeicons/core-free-icons/CheckmarkCircle02Icon";
+import Clock01Icon from "@hugeicons/core-free-icons/Clock01Icon";
+import Menu01Icon from "@hugeicons/core-free-icons/Menu01Icon";
 import MoneyReceive01Icon from "@hugeicons/core-free-icons/MoneyReceive01Icon";
 import MoneySend01Icon from "@hugeicons/core-free-icons/MoneySend01Icon";
+import Notification03Icon from "@hugeicons/core-free-icons/Notification03Icon";
 import PlusSignIcon from "@hugeicons/core-free-icons/PlusSignIcon";
+import Search01Icon from "@hugeicons/core-free-icons/Search01Icon";
 import Settings01Icon from "@hugeicons/core-free-icons/Settings01Icon";
 import TransactionIcon from "@hugeicons/core-free-icons/TransactionIcon";
 import Upload01Icon from "@hugeicons/core-free-icons/Upload01Icon";
@@ -104,6 +110,18 @@ export function CKJSApp() {
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [selectedProject, setSelectedProject] = useState<(typeof projectRows)[number] | null>(null);
   const [toast, setToast] = useState("");
+  const commandSearchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const focusCommandSearch = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "f") {
+        event.preventDefault();
+        commandSearchRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", focusCommandSearch);
+    return () => window.removeEventListener("keydown", focusCommandSearch);
+  }, []);
 
   const go = (next: View) => { setView(next); setSidebarOpen(false); setSelectedProject(null); };
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(""), 2600); };
@@ -149,9 +167,9 @@ export function CKJSApp() {
 
       <section className="content-shell">
         <header className="topbar">
-          <button className="mobile-menu" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Buka navigasi" type="button">☰</button>
-          <div className="topbar-title"><span>CKJS Finance / {view}</span><strong>{view}</strong></div>
-          <div className="topbar-actions"><button className="icon-button" aria-label="Cari" type="button">⌕</button><button className="icon-button notification" aria-label="Notifikasi" type="button">♧<i /></button><div className="top-avatar">JI</div></div>
+          <button className="mobile-menu" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Buka navigasi" type="button"><HugeiconsIcon icon={Menu01Icon} size={20} strokeWidth={1.8} /></button>
+          <label className="global-command"><HugeiconsIcon icon={Search01Icon} size={18} strokeWidth={1.7} /><input ref={commandSearchRef} placeholder="Search or type a command" aria-label="Search or type a command" /><kbd>⌘ F</kbd></label>
+          <div className="topbar-actions"><button className="icon-button notification" aria-label="Notifikasi" type="button"><HugeiconsIcon icon={Notification03Icon} size={17} strokeWidth={1.7} /><i /></button><div className="top-avatar">JI</div></div>
         </header>
 
         <div className="page">
@@ -185,7 +203,10 @@ function DashboardView({ go, newTransaction, transfer, cashAccounts }: { go: (vi
     { label: "Net Profit", value: "Rp 437.250.000", delta: "34,1%", tone: "purple", meta: "profit margin" },
   ];
   return <>
-    <PageIntro title="Financial Overview" description="Ringkasan posisi keuangan CV. Cipta Karya Jaya Sentosa." action={<><label className="select-control">Periode<select defaultValue="aug"><option value="aug">Agustus 2026</option><option>Juli 2026</option></select></label><label className="select-control">Project<select defaultValue="all"><option value="all">All Projects</option><option>Hotel Gamelan</option><option>Villa Ubud</option></select></label><button className="primary-button" onClick={newTransaction} type="button"><span>＋</span> New Transaction</button></>} />
+    <section className="dashboard-welcome">
+      <div className="dashboard-welcome-top"><div><p>Thursday, 20th August</p><h1>Good Evening! Jason,</h1></div><div className="heading-actions"><label className="select-control">Periode<select defaultValue="aug"><option value="aug">Agustus 2026</option><option>Juli 2026</option></select></label><label className="select-control">Project<select defaultValue="all"><option value="all">All Projects</option><option>Hotel Gamelan</option><option>Villa Ubud</option></select></label><button className="primary-button" onClick={newTransaction} type="button"><span>＋</span> New Transaction</button></div></div>
+      <div className="welcome-stats"><span><HugeiconsIcon icon={Clock01Icon} size={17} strokeWidth={1.8} /><b>12hrs</b> Time Saved</span><span><HugeiconsIcon icon={CheckmarkCircle02Icon} size={17} strokeWidth={1.8} /><b>1</b> Project Completed</span><span><HugeiconsIcon icon={HourglassIcon} size={17} strokeWidth={1.8} /><b>3</b> Projects In-progress</span></div>
+    </section>
     <div className="quick-row"><button onClick={newTransaction} type="button"><i>＋</i><span><b>Catat transaksi</b><small>Income atau expense</small></span></button><button onClick={transfer} type="button"><i>↔</i><span><b>Transfer dana</b><small>Antar pos kas</small></span></button><button onClick={() => go("Projects")} type="button"><i>▱</i><span><b>Kelola proyek</b><small>Project aktif</small></span></button></div>
     <section className="kpi-grid" aria-label="Ringkasan keuangan">{kpis.map((item) => <article className={`kpi-card ${item.tone}`} key={item.label}><div className="kpi-top"><span>{item.label}</span><i>↗</i></div><strong>{item.value}</strong><p><b>{item.delta}</b> {item.meta}</p></article>)}</section>
     <section className="dashboard-grid">

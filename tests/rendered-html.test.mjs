@@ -20,7 +20,9 @@ test("server-renders CKJS Finance application shell", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>CKJS Finance/);
-  assert.match(html, /Financial Overview/);
+  assert.match(html, /Good Evening! Jason,/);
+  assert.match(html, /Search or type a command/);
+  assert.match(html, /Projects In-progress/);
   assert.match(html, /CV\. Cipta Karya Jaya Sentosa/);
   assert.match(html, /New Transaction/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/);
