@@ -1,6 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Book01Icon from "@hugeicons/core-free-icons/Book01Icon";
+import Chart01Icon from "@hugeicons/core-free-icons/Chart01Icon";
+import DashboardSquare01Icon from "@hugeicons/core-free-icons/DashboardSquare01Icon";
+import Folder01Icon from "@hugeicons/core-free-icons/Folder01Icon";
+import HelpCircleIcon from "@hugeicons/core-free-icons/HelpCircleIcon";
+import MoneyReceive01Icon from "@hugeicons/core-free-icons/MoneyReceive01Icon";
+import MoneySend01Icon from "@hugeicons/core-free-icons/MoneySend01Icon";
+import PlusSignIcon from "@hugeicons/core-free-icons/PlusSignIcon";
+import Settings01Icon from "@hugeicons/core-free-icons/Settings01Icon";
+import TransactionIcon from "@hugeicons/core-free-icons/TransactionIcon";
+import Upload01Icon from "@hugeicons/core-free-icons/Upload01Icon";
+import Wallet02Icon from "@hugeicons/core-free-icons/Wallet02Icon";
 
 type View = "Dashboard" | "Projects" | "Transactions" | "Cash Accounts" | "Receivables" | "Payables" | "Reports" | "Masters" | "Migration" | "Settings";
 type TransactionStatus = "DRAFT" | "POSTED" | "REVERSED";
@@ -17,18 +30,18 @@ type Transaction = {
   status: TransactionStatus;
 };
 
-const navItems: { icon: string; label: View; group: "workspace" | "system" }[] = [
-  { icon: "◆", label: "Dashboard", group: "workspace" },
-  { icon: "▱", label: "Projects", group: "workspace" },
-  { icon: "↕", label: "Transactions", group: "workspace" },
-  { icon: "▣", label: "Cash Accounts", group: "workspace" },
-  { icon: "↓", label: "Receivables", group: "workspace" },
-  { icon: "↑", label: "Payables", group: "workspace" },
-  { icon: "▥", label: "Reports", group: "workspace" },
-  { icon: "◫", label: "Masters", group: "system" },
-  { icon: "⇧", label: "Migration", group: "workspace" },
-  { icon: "⚙", label: "Settings", group: "system" },
-];
+const navItems = [
+  { icon: DashboardSquare01Icon, label: "Dashboard", group: "workspace" },
+  { icon: Folder01Icon, label: "Projects", group: "workspace" },
+  { icon: TransactionIcon, label: "Transactions", group: "workspace" },
+  { icon: Wallet02Icon, label: "Cash Accounts", group: "workspace" },
+  { icon: MoneyReceive01Icon, label: "Receivables", group: "workspace" },
+  { icon: MoneySend01Icon, label: "Payables", group: "workspace" },
+  { icon: Chart01Icon, label: "Reports", group: "workspace" },
+  { icon: Book01Icon, label: "Masters", group: "system" },
+  { icon: Upload01Icon, label: "Migration", group: "workspace" },
+  { icon: Settings01Icon, label: "Settings", group: "system" },
+] as const;
 
 const projectRows = [
   { name: "Hotel Gamelan", code: "PRJ-026", client: "PT Aruna Hospitality", start: "10 Jan 2026", end: "20 Nov 2026", revenue: 480000000, expense: 302500000, status: "ACTIVE", color: "#3764e8" },
@@ -122,15 +135,15 @@ export function CKJSApp() {
       <aside className={`sidebar ${sidebarOpen ? "is-open" : ""}`}>
         <div className="brand"><div className="brand-word">CKJS Finance</div></div>
         <nav className="sidebar-nav" aria-label="Navigasi utama">
-          {navItems.filter((item) => item.group === "workspace").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><span className="nav-symbol">{item.icon}</span>{item.label}</button>)}
+          {navItems.filter((item) => item.group === "workspace").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><HugeiconsIcon className="nav-symbol" icon={item.icon} size={18} strokeWidth={1.7} />{item.label}</button>)}
         </nav>
         <section className="sidebar-projects" aria-label="Proyek aktif">
-          <div className="sidebar-section-head"><strong>Projects</strong><button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" type="button">＋</button></div>
+          <div className="sidebar-section-head"><strong>Projects</strong><button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" type="button"><HugeiconsIcon icon={PlusSignIcon} size={17} strokeWidth={2} /></button></div>
           {projectRows.slice(0, 3).map((project) => <button className={`project-shortcut ${selectedProject?.name === project.name ? "active" : ""}`} onClick={() => { setView("Projects"); setSelectedProject(project); setSidebarOpen(false); }} key={project.name} type="button"><i style={{ background: project.color }} />{project.name}</button>)}
         </section>
         <div className="sidebar-footer">
-          {navItems.filter((item) => item.group === "system").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><span className="nav-symbol">{item.icon}</span>{item.label}</button>)}
-          <button className="nav-item help-item" onClick={() => notify("Pusat bantuan CKJS siap membantu Anda.")} type="button"><span className="nav-symbol">?</span>Help &amp; Support<span className="help-badge">2</span></button>
+          {navItems.filter((item) => item.group === "system").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><HugeiconsIcon className="nav-symbol" icon={item.icon} size={18} strokeWidth={1.7} />{item.label}</button>)}
+          <button className="nav-item help-item" onClick={() => notify("Pusat bantuan CKJS siap membantu Anda.")} type="button"><HugeiconsIcon className="nav-symbol" icon={HelpCircleIcon} size={18} strokeWidth={1.7} />Help &amp; Support<span className="help-badge">2</span></button>
         </div>
       </aside>
 

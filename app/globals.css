@@ -81,14 +81,15 @@ button { cursor:pointer; }
 
 /* Sidebar redesign — inspired by the supplied Mondays navigation reference */
 .sidebar {
-  inset:14px auto 14px 14px;
+  inset:0 auto 0 0;
   width:232px;
   padding:22px 12px 14px;
-  border:1px solid #ececef;
-  border-radius:12px;
+  border:0;
+  border-right:1px solid #e7e8eb;
+  border-radius:0;
   background:#fdfdfd;
   color:#25272b;
-  box-shadow:0 10px 32px rgba(28,36,48,.055);
+  box-shadow:none;
   overflow-y:auto;
   scrollbar-width:none;
 }
@@ -115,13 +116,13 @@ button { cursor:pointer; }
 .sidebar-footer .nav-item.active { color:#fff; background:#3269df; }
 .help-item .nav-symbol { width:18px; height:18px; border:1px solid #b7bbc2; border-radius:50%; font-size:9px; }
 .help-badge { margin-left:auto; min-width:19px; height:19px; display:grid; place-items:center; border-radius:5px; background:#a7efb2; color:#24783a; font-size:9px; font-weight:700; }
-.content-shell { margin-left:260px; }
+.content-shell { margin-left:232px; }
 .topbar { height:70px; background:rgba(255,255,255,.94); backdrop-filter:blur(12px); }
 .topbar-title strong { font-size:13px; }
 .topbar-title span { color:#a1a5ad; }
 
 @media (max-width:760px) {
-  .sidebar { inset:10px auto 10px 10px; width:244px; padding-top:21px; transform:translateX(calc(-100% - 18px)); }
+  .sidebar { inset:0 auto 0 0; width:244px; padding-top:21px; transform:translateX(-100%); }
   .sidebar.is-open { transform:translateX(0); }
   .content-shell { margin-left:0; }
 }
