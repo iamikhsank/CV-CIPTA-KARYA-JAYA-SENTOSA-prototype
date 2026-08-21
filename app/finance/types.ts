@@ -1,4 +1,4 @@
-export type View = "Dashboard" | "Projects" | "Transactions" | "Cash Accounts" | "Receivables" | "Payables" | "Reports" | "Masters" | "Migration" | "Settings";
+export type View = "Dashboard" | "Projects" | "Transactions" | "Cash Accounts" | "Receivables" | "Payables" | "Reports" | "Masters" | "Migration" | "Settings" | "Help & Support";
 
 export type TransactionStatus = "DRAFT" | "POSTED" | "REVERSED";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import "@fontsource-variable/inter";
 import { useEffect, useRef, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import ArrowDown01Icon from "@hugeicons/core-free-icons/ArrowDown01Icon";
@@ -27,6 +26,7 @@ import { TransferModal } from "./finance/components/TransferModal";
 import { cashSeed, initialTransactions, payables, projectRows, receivables } from "./finance/data";
 import { CashAccountsView } from "./finance/pages/CashAccountsView";
 import { DashboardView } from "./finance/pages/DashboardView";
+import { HelpSupportView } from "./finance/pages/HelpSupportView";
 import { LedgerView } from "./finance/pages/LedgerView";
 import { LoginView } from "./finance/pages/LoginView";
 import { MastersView } from "./finance/pages/MastersView";
@@ -56,12 +56,16 @@ const nestedNav: Partial<Record<View, string[]>> = {
   Masters: ["Chart of Accounts", "Contacts", "Transaction Categories"],
 };
 
+export type AppTheme = "light" | "dark";
+
 export function CKJSApp() {
   const [authenticated, setAuthenticated] = useState(false);
   const [view, setView] = useState<View>("Dashboard");
   const [subPage, setSubPage] = useState("P&L");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarProjectsOpen, setSidebarProjectsOpen] = useState(true);
+  const [theme, setTheme] = useState<AppTheme>("light");
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [cashAccounts, setCashAccounts] = useState<CashAccount[]>(cashSeed);
   const [receivableRecords, setReceivableRecords] = useState<LedgerRecord[]>(receivables);
@@ -72,10 +76,68 @@ export function CKJSApp() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [toast, setToast] = useState("");
   const commandSearchRef = useRef<HTMLInputElement>(null);
+  const [notifications, setNotifications] = useState([
+    {
+      id: "notif-1",
+      title: "Termin Tagihan Jatuh Tempo",
+      message: "Termin Proyek Hotel Gamelan Rp 250.000.000 jatuh tempo dalam 3 hari.",
+      time: "10 mnt lalu",
+      read: false,
+      type: "warning",
+      actionView: "Receivables" as View,
+    },
+    {
+      id: "notif-2",
+      title: "Pembayaran Material Terposting",
+      message: "Pembayaran beban PT Semen Tiga Roda Rp 45.200.000 masuk jurnal umum.",
+      time: "1 jam lalu",
+      read: false,
+      type: "success",
+      actionView: "Transactions" as View,
+    },
+    {
+      id: "notif-3",
+      title: "Peringatan Saldo Kas Proyek",
+      message: "Kas Proyek Warehouse Cikande mendekati batas minimum limit operasional.",
+      time: "3 jam lalu",
+      read: false,
+      type: "alert",
+      actionView: "Cash Accounts" as View,
+    },
+  ]);
+  const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const storedTheme: AppTheme = window.localStorage.getItem("ckjs-theme") === "dark" ? "dark" : "light";
+    setTheme(storedTheme);
+    document.documentElement.dataset.theme = storedTheme;
+  }, []);
+
+  const updateTheme = (nextTheme: AppTheme) => {
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    window.localStorage.setItem("ckjs-theme", nextTheme);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setNotifDropdownOpen(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const focusCommandSearch = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "f") {
+      if ((event.metaKey || event.ctrlKey) && (event.key.toLowerCase() === "k" || event.key.toLowerCase() === "f")) {
         event.preventDefault();
         commandSearchRef.current?.focus();
       }
@@ -156,39 +218,271 @@ export function CKJSApp() {
 
   return <main className="app-shell">
     <aside className={`sidebar ${sidebarOpen ? "is-open" : ""} ${sidebarCollapsed ? "is-collapsed" : ""}`}>
-      <div className="brand"><div className="brand-copy"><div className="brand-word">CKJS Finance</div><span>Financial Management</span></div>{!sidebarCollapsed && <button className={`sidebar-toggle ${sidebarOpen ? "is-mobile-open" : ""}`} onClick={toggleSidebar} aria-label="Tutup sidebar" title="Tutup sidebar" type="button"><HugeiconsIcon className="sidebar-close-icon" icon={ArrowLeft01Icon} size={20} strokeWidth={2} /><HugeiconsIcon className="sidebar-open-icon" icon={ArrowRight01Icon} size={20} strokeWidth={2} /></button>}</div>
+      <div className="brand">
+        <div className="brand-main">
+          <div className="brand-logo-slot" title="Logo CV. Cipta Karya Jaya Sentosa">
+            <div className="brand-mark">
+              <span>CK</span>
+            </div>
+          </div>
+          <div className="brand-copy">
+            <div className="brand-word">CKJS Finance</div>
+            <span>Financial Management</span>
+          </div>
+        </div>
+        {!sidebarCollapsed && (
+          <button
+            className={`sidebar-toggle ${sidebarOpen ? "is-mobile-open" : ""}`}
+            onClick={toggleSidebar}
+            aria-label="Tutup sidebar"
+            title="Tutup sidebar"
+            type="button"
+          >
+            <HugeiconsIcon className="sidebar-close-icon" icon={ArrowLeft01Icon} size={20} strokeWidth={2} />
+            <HugeiconsIcon className="sidebar-open-icon" icon={ArrowRight01Icon} size={20} strokeWidth={2} />
+          </button>
+        )}
+      </div>
       <nav className="sidebar-nav" aria-label="Navigasi utama">
         {navItems.filter((item) => item.group === "workspace").map((item) => <div className={`nav-group ${nestedNav[item.label] ? "has-children" : ""}`} key={item.label}><button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label, nestedNav[item.label]?.[0])} type="button"><HugeiconsIcon className="nav-symbol" icon={item.icon} size={18} strokeWidth={1.7} />{item.label}{nestedNav[item.label] && <HugeiconsIcon className={`nav-chevron ${view === item.label ? "open" : ""}`} icon={ArrowDown01Icon} size={14} strokeWidth={1.8} />}</button>{nestedNav[item.label] && view === item.label && <div className="nav-children">{nestedNav[item.label]!.map((child) => <button className={subPage === child ? "active" : ""} onClick={() => go(item.label, child)} key={child} type="button"><i />{child}</button>)}</div>}</div>)}
       </nav>
-      <section className="sidebar-projects" aria-label="Proyek aktif">
-        <div className="sidebar-section-head"><strong>Projects</strong><button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" type="button"><HugeiconsIcon icon={PlusSignIcon} size={17} strokeWidth={2} /></button></div>
-        {projectRows.slice(0, 3).map((project) => <button className={`project-shortcut ${selectedProject?.name === project.name ? "active" : ""}`} onClick={() => { setView("Projects"); setSelectedProject(project); setSidebarOpen(false); }} key={project.name} type="button"><i style={{ background: project.color }} />{project.name}</button>)}
+      <section className={`sidebar-projects ${sidebarProjectsOpen ? "" : "is-collapsed"}`} aria-label="Proyek aktif">
+        <div className="sidebar-section-head">
+          <strong>Projects</strong>
+          <div className="sidebar-section-actions">
+            <button
+              className={`sidebar-section-toggle ${sidebarProjectsOpen ? "is-open" : ""}`}
+              onClick={() => setSidebarProjectsOpen((open) => !open)}
+              aria-label={sidebarProjectsOpen ? "Sembunyikan daftar proyek" : "Tampilkan daftar proyek"}
+              aria-expanded={sidebarProjectsOpen}
+              title={sidebarProjectsOpen ? "Sembunyikan proyek" : "Tampilkan proyek"}
+              type="button"
+            >
+              <HugeiconsIcon icon={ArrowDown01Icon} size={15} strokeWidth={2} />
+            </button>
+            <button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" title="Buka daftar proyek" type="button">
+              <HugeiconsIcon icon={PlusSignIcon} size={17} strokeWidth={2} />
+            </button>
+          </div>
+        </div>
+        {sidebarProjectsOpen && (
+          <div className="sidebar-project-list">
+            {projectRows.slice(0, 5).map((project) => (
+              <button
+                className={`project-shortcut ${selectedProject?.name === project.name ? "active" : ""}`}
+                onClick={() => {
+                  setView("Projects");
+                  setSelectedProject(project);
+                  setSidebarOpen(false);
+                }}
+                key={project.name}
+                type="button"
+              >
+                <i style={{ background: project.color }} />
+                {project.name}
+              </button>
+            ))}
+          </div>
+        )}
       </section>
       <div className="sidebar-footer">
         {navItems.filter((item) => item.group === "system").map((item) => <button className={`nav-item ${view === item.label ? "active" : ""}`} onClick={() => go(item.label)} key={item.label} type="button"><HugeiconsIcon className="nav-symbol" icon={item.icon} size={18} strokeWidth={1.7} />{item.label}</button>)}
-        <button className="nav-item help-item" onClick={() => notify("Pusat bantuan CKJS siap membantu Anda.")} type="button"><HugeiconsIcon className="nav-symbol" icon={HelpCircleIcon} size={18} strokeWidth={1.7} />Help &amp; Support<span className="help-badge">2</span></button>
+        <button className={`nav-item help-item ${view === "Help & Support" ? "active" : ""}`} onClick={() => go("Help & Support")} type="button"><HugeiconsIcon className="nav-symbol" icon={HelpCircleIcon} size={18} strokeWidth={1.7} />Help &amp; Support<span className="help-badge">2</span></button>
         <button className="nav-item logout-item" onClick={() => setAuthenticated(false)} type="button"><HugeiconsIcon className="nav-symbol" icon={Logout03Icon} size={18} strokeWidth={1.7} />Sign out</button>
       </div>
     </aside>
 
     <section className={`content-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       <header className="topbar">
-        {sidebarCollapsed && <button className="sidebar-toggle topbar-sidebar-toggle is-collapsed" onClick={toggleSidebar} aria-label="Buka sidebar" title="Buka sidebar" type="button"><HugeiconsIcon className="sidebar-close-icon" icon={ArrowLeft01Icon} size={20} strokeWidth={2} /><HugeiconsIcon className="sidebar-open-icon" icon={ArrowRight01Icon} size={20} strokeWidth={2} /></button>}
-        <label className="global-command"><HugeiconsIcon icon={Search01Icon} size={18} strokeWidth={1.7} /><input ref={commandSearchRef} placeholder="Search or type a command" aria-label="Search or type a command" /><kbd>⌘ F</kbd></label>
-        <div className="topbar-actions"><button className="icon-button notification" aria-label="Notifikasi" type="button"><HugeiconsIcon icon={Notification03Icon} size={17} strokeWidth={1.7} /><i /></button><div className="top-avatar">JI</div></div>
+        {sidebarCollapsed && (
+          <button
+            className="sidebar-toggle topbar-sidebar-toggle is-collapsed"
+            onClick={toggleSidebar}
+            aria-label="Buka sidebar"
+            title="Buka sidebar"
+            type="button"
+          >
+            <HugeiconsIcon className="sidebar-close-icon" icon={ArrowLeft01Icon} size={18} strokeWidth={2} />
+            <HugeiconsIcon className="sidebar-open-icon" icon={ArrowRight01Icon} size={18} strokeWidth={2} />
+          </button>
+        )}
+        <label className="global-command">
+          <HugeiconsIcon icon={Search01Icon} size={17} strokeWidth={1.8} />
+          <input ref={commandSearchRef} placeholder="Search or type a command" aria-label="Search or type a command" />
+          <kbd>Ctrl K</kbd>
+        </label>
+
+        <div className="topbar-actions">
+          {/* Notification Popover Button & Dropdown */}
+          <div className="topbar-popover-anchor" ref={notifRef}>
+            <button
+              className={`icon-button notification ${notifDropdownOpen ? "active" : ""}`}
+              onClick={() => {
+                setNotifDropdownOpen((open) => !open);
+                setUserDropdownOpen(false);
+              }}
+              aria-label="Notifikasi"
+              title="Pusat Notifikasi"
+              type="button"
+            >
+              <HugeiconsIcon icon={Notification03Icon} size={18} strokeWidth={1.8} />
+              {notifications.some((n) => !n.read) && <i className="notif-ping" />}
+            </button>
+
+            {notifDropdownOpen && (
+              <div className="topbar-dropdown notif-dropdown">
+                <div className="dropdown-head">
+                  <div className="dropdown-head-title">
+                    <strong>Pemberitahuan</strong>
+                    <span className="notif-count-pill">{notifications.filter((n) => !n.read).length} baru</span>
+                  </div>
+                  <button
+                    className="dropdown-text-btn"
+                    onClick={() => {
+                      setNotifications((items) => items.map((n) => ({ ...n, read: true })));
+                      notify("Semua notifikasi telah ditandai dibaca.");
+                    }}
+                    type="button"
+                  >
+                    Tandai dibaca
+                  </button>
+                </div>
+                <div className="notif-list">
+                  {notifications.map((item) => (
+                    <button
+                      key={item.id}
+                      className={`notif-item ${item.read ? "read" : "unread"}`}
+                      onClick={() => {
+                        setNotifications((items) => items.map((n) => n.id === item.id ? { ...n, read: true } : n));
+                        go(item.actionView);
+                        setNotifDropdownOpen(false);
+                      }}
+                      type="button"
+                    >
+                      <div className={`notif-indicator ${item.type}`} />
+                      <div className="notif-content">
+                        <div className="notif-title-row">
+                          <strong className="notif-title">{item.title}</strong>
+                          <span className="notif-time">{item.time}</span>
+                        </div>
+                        <p className="notif-message">{item.message}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="dropdown-footer">
+                  <button
+                    className="dropdown-footer-btn"
+                    onClick={() => {
+                      go("Reports");
+                      setNotifDropdownOpen(false);
+                    }}
+                    type="button"
+                  >
+                    Buka Laporan Aktivitas Keuangan →
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* User Profile Avatar & Dropdown */}
+          <div className="topbar-popover-anchor" ref={userMenuRef}>
+            <button
+              className={`top-user-pill ${userDropdownOpen ? "active" : ""}`}
+              onClick={() => {
+                setUserDropdownOpen((open) => !open);
+                setNotifDropdownOpen(false);
+              }}
+              aria-label="Profil Pengguna"
+              type="button"
+            >
+              <div className="top-avatar">
+                <span>JK</span>
+                <i className="avatar-status-online" />
+              </div>
+              <div className="top-user-meta">
+                <strong className="user-name">Jason Kamal</strong>
+                <span className="user-role">Finance Director</span>
+              </div>
+              <HugeiconsIcon className={`user-dropdown-chevron ${userDropdownOpen ? "open" : ""}`} icon={ArrowDown01Icon} size={14} strokeWidth={2} />
+            </button>
+
+            {userDropdownOpen && (
+              <div className="topbar-dropdown user-dropdown">
+                <div className="user-dropdown-header">
+                  <div className="user-dropdown-avatar">JK</div>
+                  <div className="user-dropdown-details">
+                    <strong>Jason Kamal</strong>
+                    <span>jason.kamal@ckjs.co.id</span>
+                    <span className="role-tag">Finance Director · Admin</span>
+                  </div>
+                </div>
+                <div className="user-dropdown-divider" />
+                <div className="user-dropdown-menu">
+                  <button
+                    className="user-menu-item"
+                    onClick={() => {
+                      go("Settings");
+                      setUserDropdownOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <HugeiconsIcon icon={Settings01Icon} size={16} strokeWidth={1.8} />
+                    Pengaturan Akun &amp; Sistem
+                  </button>
+                  <button
+                    className="user-menu-item"
+                    onClick={() => {
+                      go("Help & Support");
+                      setUserDropdownOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <HugeiconsIcon icon={HelpCircleIcon} size={16} strokeWidth={1.8} />
+                    Bantuan &amp; Dokumentasi
+                  </button>
+                </div>
+                <div className="user-dropdown-divider" />
+                <div className="user-dropdown-footer">
+                  <button
+                    className="user-menu-item logout"
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      setAuthenticated(false);
+                    }}
+                    type="button"
+                  >
+                    <HugeiconsIcon icon={Logout03Icon} size={16} strokeWidth={1.8} />
+                    Keluar (Sign out)
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       <div className="page">
         {view === "Dashboard" && <DashboardView go={go} newTransaction={() => setNewTxOpen(true)} transfer={() => setTransferOpen(true)} cashAccounts={cashAccounts} />}
-        {view === "Projects" && (selectedProject ? <ProjectDetail project={selectedProject} transactions={transactions} back={() => setSelectedProject(null)} /> : <ProjectsView openProject={setSelectedProject} />)}
+        {view === "Projects" && (selectedProject ? (
+          <ProjectDetail
+            project={selectedProject}
+            transactions={transactions}
+            back={() => setSelectedProject(null)}
+            newTransaction={() => setNewTxOpen(true)}
+            selectTransaction={setSelectedTx}
+          />
+        ) : <ProjectsView openProject={setSelectedProject} />)}
         {view === "Transactions" && <TransactionsView transactions={transactions} newTransaction={() => setNewTxOpen(true)} selectTransaction={setSelectedTx} />}
         {view === "Cash Accounts" && <CashAccountsView accounts={cashAccounts} transactions={transactions} transfer={() => setTransferOpen(true)} />}
         {view === "Receivables" && <LedgerView type="AR" rows={receivableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} />}
         {view === "Payables" && <LedgerView type="AP" rows={payableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} />}
-        {view === "Reports" && <ReportsView notify={notify} report={subPage} />}
+        {view === "Reports" && <ReportsView notify={notify} report={subPage} setReport={setSubPage} />}
         {view === "Masters" && <MastersView notify={notify} tab={subPage} setTab={setSubPage} />}
         {view === "Migration" && <MigrationView notify={notify} />}
-        {view === "Settings" && <SettingsView notify={notify} />}
+        {view === "Settings" && <SettingsView notify={notify} theme={theme} onThemeChange={updateTheme} />}
+        {view === "Help & Support" && <HelpSupportView notify={notify} />}
       </div>
     </section>
 

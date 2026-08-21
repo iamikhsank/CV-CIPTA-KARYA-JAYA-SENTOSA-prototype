@@ -1,0 +1,1476 @@
+/* ==========================================================================
+   Projects View & Portfolio Tracking Styles
+   ========================================================================== */
+
+/* Add Action with Dropdown Trigger */
+.projects-add-action {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.projects-add-menu {
+  height: 36px;
+  width: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--brand);
+  border-radius: 0 6px 6px 0;
+  background: var(--brand);
+  color: #ffffff;
+  cursor: pointer;
+  margin-left: -1px;
+}
+
+.projects-add-menu:hover {
+  background: var(--brand-hover);
+}
+
+.projects-add-action .primary-button {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Projects Summary Top Cards */
+.projects-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.projects-summary-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  min-height: 126px;
+  box-sizing: border-box;
+}
+
+.projects-summary-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px -2px rgba(16, 24, 40, 0.06);
+  transform: translateY(-1px);
+}
+
+.projects-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.projects-summary-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.projects-summary-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: var(--muted);
+  border: 1px solid #e2e8f0;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.projects-summary-card:hover .projects-summary-icon {
+  color: var(--ink);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.projects-summary-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 4px 0 2px;
+}
+
+.projects-summary-value strong {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(22px, 1.8vw, 26px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.4px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.projects-summary-unit {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.projects-summary-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+}
+
+.projects-summary-trend {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.projects-trend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #168b67;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.projects-trend-pill.blue {
+  color: #2563eb;
+}
+
+.projects-trend-sub {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.projects-summary-meta {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Sparkline Trend on Summary Cards */
+.projects-mini-trend-wrap {
+  width: 96px;
+  height: 48px;
+  flex: 0 0 auto;
+  color: #2563eb;
+}
+
+.projects-mini-trend-wrap.green {
+  color: #168b67;
+}
+
+.projects-mini-trend-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.projects-trend-area {
+  fill: currentColor;
+  opacity: 0.08;
+}
+
+.projects-trend-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.projects-trend-dot {
+  fill: currentColor;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 6-Month Paired Mini Bar Chart for Active Projects (Tahun Ini vs Tahun Lalu) */
+.projects-mini-bars-wrap {
+  width: 96px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+}
+
+.projects-mini-bars-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.projects-mini-bars-wrap .mini-bar {
+  transition: fill 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+/* Blue tone for Active Projects */
+.projects-mini-bars-wrap.blue .bar-prev-year {
+  fill: #cbd5e1;
+}
+
+.projects-mini-bars-wrap.blue .bar-prev-year:hover {
+  fill: #94a3b8;
+}
+
+.projects-mini-bars-wrap.blue .bar-curr-year {
+  fill: #93c5fd;
+}
+
+.projects-mini-bars-wrap.blue .bar-curr-year.is-latest {
+  fill: #2563eb;
+}
+
+.projects-mini-bars-wrap.blue .bar-curr-year:hover {
+  fill: #1d4ed8;
+}
+
+/* Green tone fallback */
+.projects-mini-bars-wrap.green .bar-prev-year {
+  fill: #cbd5e1;
+}
+
+.projects-mini-bars-wrap.green .bar-prev-year:hover {
+  fill: #94a3b8;
+}
+
+.projects-mini-bars-wrap.green .bar-curr-year {
+  fill: #6ee7b7;
+}
+
+.projects-mini-bars-wrap.green .bar-curr-year.is-latest {
+  fill: #168b67;
+}
+
+.projects-mini-bars-wrap.green .bar-curr-year:hover {
+  fill: #0f766e;
+}
+
+.projects-mini-bars-wrap.green .mini-bar.is-current {
+  fill: #168b67;
+}
+
+.projects-mini-bars-wrap.green .mini-bar.is-prev:hover {
+  fill: #a7f3d0;
+}
+
+/* Projects List Card & Toolbar */
+.projects-list-card {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.03);
+}
+
+.projects-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+  flex-wrap: wrap;
+}
+
+.projects-toolbar .filter-bar {
+  border-bottom: 0;
+  padding: 0;
+  background: transparent;
+  flex: 1;
+}
+
+.projects-search {
+  min-width: 220px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+.projects-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.projects-search input::placeholder {
+  color: #94a3b8;
+}
+
+.projects-filter-button {
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.projects-filter-button:hover {
+  background: #f8fafc;
+  color: var(--ink);
+}
+
+.projects-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.projects-view-toggle {
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.projects-view-toggle button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.projects-view-toggle button.active {
+  background: #f1f5f9;
+  color: var(--ink);
+}
+
+.projects-sort {
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.projects-sort:hover {
+  background: #f8fafc;
+  color: var(--ink);
+}
+
+.projects-sort.active {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+/* Projects Table */
+.projects-table-wrap {
+  overflow-x: auto;
+}
+
+.projects-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.projects-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 14px;
+  background: #fafbfc;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.projects-table td {
+  padding: 12px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #edf1f4;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+/* Specific Column Sizing to eliminate white gap on Status & Actions */
+.projects-table th.col-project,
+.projects-table td.col-project {
+  width: auto;
+  min-width: 190px;
+}
+
+.projects-table th.col-client,
+.projects-table td.col-client {
+  width: 15%;
+  min-width: 120px;
+}
+
+.projects-table th.col-timeline,
+.projects-table td.col-timeline {
+  width: 15%;
+  min-width: 130px;
+}
+
+.projects-table th.col-revenue,
+.projects-table td.col-revenue,
+.projects-table th.col-expense,
+.projects-table td.col-expense,
+.projects-table th.col-profit,
+.projects-table td.col-profit {
+  width: 12%;
+  min-width: 110px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.projects-table th.col-status,
+.projects-table td.col-status {
+  width: 110px;
+  min-width: 110px;
+  max-width: 115px;
+  text-align: center;
+  padding: 12px 4px;
+}
+
+.projects-table th.col-actions,
+.projects-table td.col-actions {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  text-align: center;
+  padding: 12px 8px 12px 0;
+}
+
+.projects-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.project-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-initial {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid;
+  font-style: normal;
+}
+
+.projects-table td b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.projects-table td small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.project-timeline {
+  display: block;
+  width: 100px;
+  height: 4px;
+  border-radius: 2px;
+  background: #edf1f5;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.project-timeline i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.project-profit {
+  color: #168b67;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.projects-row-menu {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.projects-row-menu:hover {
+  background: #f1f5f9;
+  color: var(--ink);
+}
+
+/* Projects Card Grid (Grid View Mode) */
+.projects-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  padding: 18px;
+  background: #f8fafc;
+}
+
+.project-overview-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+  outline: none;
+}
+
+.project-overview-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px -2px rgba(16, 24, 40, 0.08), 0 2px 6px -1px rgba(16, 24, 40, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.project-card-header .table-avatar-monogram {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+  border-radius: 50% !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  display: grid !important;
+  place-items: center !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+.project-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.project-card-subtitle {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.project-card-badge {
+  flex: 0 0 auto;
+}
+
+/* Progress Section */
+.project-card-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.project-card-progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.progress-label {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.progress-value {
+  color: var(--ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-card-timeline {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: #edf1f5;
+  overflow: hidden;
+}
+
+.project-card-timeline i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* Financial Values Grid */
+.project-card-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.project-val-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project-val-item small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-val-item b {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.project-val-item b.positive {
+  color: #168b67;
+}
+
+.projects-list-footer {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid #e2e8f0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.projects-list-footer nav {
+  display: flex;
+  gap: 6px;
+}
+
+.projects-list-footer nav button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.projects-list-footer nav button.active {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.projects-list-footer nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Project Detail Specifics */
+.detail-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.project-monogram {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.detail-hero > div:nth-child(2) {
+  flex: 1;
+}
+
+.detail-hero h1 {
+  margin: 2px 0 5px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.detail-hero p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.progress-row {
+  margin-top: 18px;
+}
+
+.progress-row > span {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.progress-row > span b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.progress-row > div {
+  height: 8px;
+  border-radius: 4px;
+  background: #edf1f5;
+  margin: 8px 0 6px;
+  overflow: hidden;
+}
+
+.progress-row > div i {
+  display: block;
+  height: 100%;
+  background: #2563eb;
+  border-radius: 4px;
+}
+
+.expense-progress > div i {
+  background: #d97706;
+}
+
+.progress-row small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.activity-list > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf1f4;
+}
+
+.activity-list > div:last-child {
+  border-bottom: 0;
+}
+
+.activity-list > div > i {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-style: normal;
+  color: #e11d48;
+  background: #fff1f2;
+}
+
+.activity-list > div > i.income {
+  color: #168b67;
+  background: #eaf7f2;
+}
+
+.activity-list > div > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-list b,
+.activity-list small {
+  display: block;
+}
+
+.activity-list b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-list small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.activity-list strong {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Project transaction workbench */
+.project-transactions-workbench {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+}
+
+.project-transactions-head {
+  min-height: 90px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-workbench-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--brand);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+}
+
+.project-transactions-head h2 {
+  margin: 0 0 4px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -0.25px;
+}
+
+.project-transactions-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.project-transactions-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+
+.project-transactions-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.project-transaction-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid var(--line);
+  background: #fafbfc;
+}
+
+.project-transaction-summary article {
+  min-width: 0;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-right: 1px solid var(--line);
+}
+
+.project-transaction-summary article:last-child {
+  border-right: 0;
+}
+
+.project-transaction-summary article > i {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-style: normal;
+}
+
+.project-transaction-summary article > i.neutral {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.project-transaction-summary article > i.income {
+  background: #eaf7f2;
+  color: #168b67;
+}
+
+.project-transaction-summary article > i.expense {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.project-transaction-summary article > i.net {
+  background: #fff7e7;
+  color: #b66a0b;
+}
+
+.project-transaction-summary article > span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.project-transaction-summary small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.project-transaction-summary strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-transaction-summary strong.text-green {
+  color: #168b67;
+}
+
+.project-transaction-summary strong.text-red {
+  color: #d93352;
+}
+
+.project-transactions-toolbar {
+  min-height: 62px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-transaction-search {
+  min-width: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.project-transaction-search:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(49, 89, 217, 0.1);
+}
+
+.project-transaction-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 12.5px;
+}
+
+.project-transaction-type-filter {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 8px;
+  background: #f1f5f9;
+}
+
+.project-transaction-type-filter button {
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: 0.15s ease;
+}
+
+.project-transaction-type-filter button:hover {
+  color: var(--ink);
+}
+
+.project-transaction-type-filter button.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+.project-status-filter .custom-dropdown-trigger {
+  min-width: 126px;
+}
+
+.project-transactions-table-wrap {
+  overflow-x: auto;
+}
+
+.project-transactions-table {
+  width: 100%;
+  min-width: 930px;
+  border-collapse: collapse;
+}
+
+.project-transactions-table th {
+  height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  background: #fafbfc;
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 750;
+  letter-spacing: 0.45px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.project-transactions-table th:first-child,
+.project-transactions-table td:first-child {
+  padding-left: 20px;
+}
+
+.project-transactions-table th:last-child,
+.project-transactions-table td:last-child {
+  padding-right: 16px;
+}
+
+.project-transactions-table td {
+  height: 64px;
+  padding: 8px 14px;
+  border-bottom: 1px solid #edf1f4;
+  color: #475569;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.project-transactions-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.project-transactions-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.project-transactions-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.project-transaction-reference b,
+.project-transaction-reference small {
+  display: block;
+  white-space: nowrap;
+}
+
+.project-transaction-reference b {
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.project-transaction-reference small {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-transaction-identity {
+  min-width: 230px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-transaction-identity > i {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  font-style: normal;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.project-transaction-identity > i.income {
+  background: #eaf7f2;
+  color: #168b67;
+}
+
+.project-transaction-identity > i.expense {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.project-transaction-identity > i.transfer {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.project-transaction-identity > span {
+  min-width: 0;
+}
+
+.project-transaction-identity b,
+.project-transaction-identity small {
+  display: block;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-transaction-identity b {
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.project-transaction-identity small {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.project-transaction-category {
+  display: inline-flex;
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: #f1f5f9;
+  color: #526174;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.project-transaction-account {
+  white-space: nowrap;
+}
+
+.project-transactions-table .amount-column,
+.project-transaction-amount {
+  text-align: right;
+}
+
+.project-transaction-amount {
+  color: var(--ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.project-transaction-amount.income {
+  color: #168b67;
+}
+
+.project-transaction-amount.expense {
+  color: #d93352;
+}
+
+.project-transaction-open {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  transition: 0.15s ease;
+}
+
+.project-transaction-open:hover {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--brand);
+  box-shadow: 0 2px 7px rgba(16, 24, 40, 0.08);
+}
+
+.project-transaction-empty {
+  min-height: 250px;
+  padding: 36px 20px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.project-transaction-empty > i {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-style: normal;
+}
+
+.project-transaction-empty b {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.project-transaction-empty p {
+  margin: 5px 0 14px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.project-transactions-footer {
+  min-height: 46px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  background: #fafbfc;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.project-transactions-footer b {
+  color: var(--ink);
+}
+
+.project-transactions-footer small {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 10.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* Responsive Projects */
+@media (max-width: 1100px) {
+  .projects-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .projects-card-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-transaction-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .project-transaction-summary article:nth-child(2) {
+    border-right: 0;
+  }
+  .project-transaction-summary article:nth-child(-n+2) {
+    border-bottom: 1px solid var(--line);
+  }
+  .project-transactions-toolbar {
+    grid-template-columns: minmax(250px, 1fr) auto;
+  }
+  .project-status-filter {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .projects-summary-grid,
+  .projects-card-grid,
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+  .project-transactions-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .project-transactions-actions {
+    width: 100%;
+  }
+  .project-transactions-actions button {
+    flex: 1;
+  }
+  .project-transactions-toolbar {
+    grid-template-columns: 1fr;
+  }
+  .project-transaction-type-filter {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .project-transaction-type-filter button {
+    flex: 1;
+  }
+  .project-status-filter {
+    width: 100%;
+    grid-column: 1;
+  }
+  .project-status-filter .custom-dropdown-trigger {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .project-transaction-summary {
+    grid-template-columns: 1fr;
+  }
+  .project-transaction-summary article,
+  .project-transaction-summary article:nth-child(2) {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .project-transaction-summary article:last-child {
+    border-bottom: 0;
+  }
+  .project-transactions-actions {
+    flex-direction: column-reverse;
+  }
+  .project-transactions-actions button {
+    width: 100%;
+  }
+  .project-transactions-footer {
+    padding: 11px 16px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}

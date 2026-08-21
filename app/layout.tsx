@@ -30,7 +30,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var theme=localStorage.getItem("ckjs-theme");document.documentElement.dataset.theme=theme==="dark"?"dark":"light"}catch(error){document.documentElement.dataset.theme="light"}})();`,
+          }}
+        />
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+        <link
+          href="https://fonts.cdnfonts.com/css/sf-pro-display"
+          rel="stylesheet"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
