@@ -34,8 +34,8 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
     <main className="login-shell">
       <section className="login-showcase">
         <div className="login-brand">
-          <div style={{ borderRadius: "50%", overflow: "hidden", width: "38px", height: "38px", display: "grid", placeItems: "center", background: "#fff", border: "1.5px solid rgba(255,255,255,0.2)" }}>
-            <img src="/logo-ckjs.jpg" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+          <div className="login-brand-logo">
+            <img src="/logo-ckjs.jpg" alt="Logo CV. Cipta Karya Jaya Sentosa" />
           </div>
           <span>
             <b>Financial Management</b>

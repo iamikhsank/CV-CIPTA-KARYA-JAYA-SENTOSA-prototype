@@ -275,7 +275,7 @@ export function CKJSApp() {
       <div className="brand">
         <div className="brand-main">
           <div className="brand-logo-slot" title="Logo CV. Cipta Karya Jaya Sentosa">
-            <div className="brand-mark" style={{ borderRadius: "50%", overflow: "hidden" }}>
+            <div className="brand-mark">
               <img
                 src="/logo-ckjs.jpg"
                 alt="Logo CV. Cipta Karya Jaya Sentosa"
