@@ -13,6 +13,10 @@ export type Transaction = {
   amount: number;
   type: "Income" | "Expense" | "Transfer";
   status: TransactionStatus;
+  materialVolume?: string;
+  dueDate?: string;
+  referenceNo?: string;
+  notes?: string;
 };
 
 export type Project = {

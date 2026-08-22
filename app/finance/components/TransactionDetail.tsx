@@ -5,9 +5,11 @@ import ArrowDataTransferHorizontalIcon from "@hugeicons/core-free-icons/ArrowDat
 import ArrowDownRight01Icon from "@hugeicons/core-free-icons/ArrowDownRight01Icon";
 import ArrowUpRight01Icon from "@hugeicons/core-free-icons/ArrowUpRight01Icon";
 import Building03Icon from "@hugeicons/core-free-icons/Building03Icon";
+import Calendar03Icon from "@hugeicons/core-free-icons/Calendar03Icon";
 import Cancel01Icon from "@hugeicons/core-free-icons/Cancel01Icon";
 import CheckmarkCircle02Icon from "@hugeicons/core-free-icons/CheckmarkCircle02Icon";
 import Invoice03Icon from "@hugeicons/core-free-icons/Invoice03Icon";
+import PackageIcon from "@hugeicons/core-free-icons/PackageIcon";
 import RotateClockwiseIcon from "@hugeicons/core-free-icons/RotateClockwiseIcon";
 import Tag01Icon from "@hugeicons/core-free-icons/Tag01Icon";
 import UserIcon from "@hugeicons/core-free-icons/UserIcon";
@@ -100,6 +102,12 @@ export function TransactionDetail({
                   <i><HugeiconsIcon icon={Tag01Icon} size={17} strokeWidth={1.8} /></i>
                   <span><dt>Category</dt><dd>{transaction.category}</dd></span>
                 </div>
+                {transaction.materialVolume && (
+                  <div>
+                    <i><HugeiconsIcon icon={PackageIcon} size={17} strokeWidth={1.8} /></i>
+                    <span><dt>Volume Material</dt><dd>{transaction.materialVolume}</dd></span>
+                  </div>
+                )}
                 <div>
                   <i><HugeiconsIcon icon={Wallet01Icon} size={17} strokeWidth={1.8} /></i>
                   <span><dt>Cash Account</dt><dd>{transaction.account}</dd></span>
@@ -108,6 +116,18 @@ export function TransactionDetail({
                   <i><HugeiconsIcon icon={UserIcon} size={17} strokeWidth={1.8} /></i>
                   <span><dt>Contact</dt><dd>{transaction.contact}</dd></span>
                 </div>
+                {transaction.dueDate && (
+                  <div>
+                    <i><HugeiconsIcon icon={Calendar03Icon} size={17} strokeWidth={1.8} /></i>
+                    <span><dt>Due Date (Tempo)</dt><dd>{transaction.dueDate}</dd></span>
+                  </div>
+                )}
+                {transaction.referenceNo && (
+                  <div>
+                    <i><HugeiconsIcon icon={Invoice03Icon} size={17} strokeWidth={1.8} /></i>
+                    <span><dt>Reference / Bukti</dt><dd>{transaction.referenceNo}</dd></span>
+                  </div>
+                )}
               </dl>
             </section>
 

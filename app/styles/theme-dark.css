@@ -786,6 +786,19 @@ html[data-theme="dark"] :is(
 }
 
 html[data-theme="dark"] :is(
+  .highlight-field,
+  .journal-metadata-summary
+) {
+  background: #111e30;
+  border-color: #27384e;
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] .journal-metadata-summary > div {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] :is(
   .ledger-action-callout:hover,
   .modal-close-btn:hover,
   .modal-cancel-btn:hover
