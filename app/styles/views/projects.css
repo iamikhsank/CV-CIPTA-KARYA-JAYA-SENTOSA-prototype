@@ -1474,3 +1474,418 @@
     gap: 6px;
   }
 }
+
+/* ==========================================================================
+   New Project Registration Modal Styles
+   ========================================================================== */
+
+.modal-card.new-project-modal {
+  width: min(1040px, 96vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -12px rgba(16, 24, 40, 0.2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.new-project-modal-body {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  overflow-y: auto;
+  max-height: calc(92vh - 140px);
+}
+
+.new-project-form-fields {
+  padding: 24px 28px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+}
+
+.new-project-form-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.new-project-form-fields input,
+.new-project-form-fields select {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.new-project-form-fields input:focus,
+.new-project-form-fields select:focus {
+  border-color: var(--brand, #2f9e5b);
+  box-shadow: 0 0 0 3px rgba(47, 158, 91, 0.12);
+}
+
+.project-color-picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.color-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.color-swatch-btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.color-swatch-btn:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.color-swatch-btn.selected {
+  border-color: var(--ink);
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
+  font-weight: 700;
+}
+
+.custom-color-picker-pill {
+  position: relative;
+  cursor: pointer;
+  border-style: dashed;
+}
+
+.custom-color-picker-pill.selected {
+  border-style: solid;
+  border-color: var(--brand, #2f9e5b);
+  justify-content: space-between;
+  padding-right: 8px;
+}
+
+.native-color-picker-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-color-inner-content {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  height: 100%;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.custom-color-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 3;
+  transition: all 0.15s ease;
+}
+
+.custom-color-reset-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  transform: scale(1.08);
+}
+
+.swatch-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.swatch-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .color-swatches-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Right Summary Panel */
+.new-project-summary-panel {
+  padding: 24px 26px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.summary-card-header h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.summary-card-header p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.project-metric-card-box {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.metric-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-val.revenue {
+  color: #168b67;
+}
+
+.metric-val.expense {
+  color: #d97706;
+}
+
+.metric-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 4px 0;
+}
+
+.metric-row.highlight {
+  font-size: 13px;
+}
+
+.metric-val.profit-positive {
+  color: #168b67;
+  font-weight: 700;
+}
+
+.metric-val.profit-negative {
+  color: #e11d48;
+  font-weight: 700;
+}
+
+.margin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.margin-badge.healthy {
+  background: #eaf6ed;
+  color: #166534;
+}
+
+.margin-badge.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.project-compliance-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.project-compliance-note i {
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.project-compliance-note b {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.project-compliance-note p {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #166534;
+}
+
+/* Financial Feasibility Analysis Box */
+.project-financial-analysis-box {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.analysis-row:last-child {
+  border-bottom: none;
+}
+
+.analysis-row.header-row {
+  background: #f8fafc;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 9px 16px;
+}
+
+.analysis-row.footer-row {
+  background: #f8fafc;
+  padding: 14px 16px;
+}
+
+.param-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.param-title {
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.param-sub {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.analysis-row .col-val {
+  text-align: right;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.analysis-row .revenue-val {
+  color: #168b67;
+}
+
+.analysis-row .expense-val {
+  color: #d97706;
+}
+
+.analysis-row .profit-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 860px) {
+  .new-project-modal-body {
+    grid-template-columns: 1fr;
+  }
+  .new-project-form-fields {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+

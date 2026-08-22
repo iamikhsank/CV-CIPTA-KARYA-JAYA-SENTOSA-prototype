@@ -47,10 +47,12 @@ export function TransactionsView({
   transactions,
   newTransaction,
   selectTransaction,
+  onEditTransaction,
 }: {
   transactions: Transaction[];
   newTransaction: () => void;
   selectTransaction: (tx: Transaction) => void;
+  onEditTransaction?: (transaction: Transaction) => void;
 }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
@@ -335,7 +337,7 @@ export function TransactionsView({
                     <td className="col-actions">
                       <RowActionMenu
                         onView={() => selectTransaction(transaction)}
-                        onEdit={() => alert(`Edit ${transaction.id}`)}
+                        onEdit={() => onEditTransaction?.(transaction)}
                         onDelete={() => alert(`Hapus transaksi ${transaction.id}`)}
                       />
                     </td>

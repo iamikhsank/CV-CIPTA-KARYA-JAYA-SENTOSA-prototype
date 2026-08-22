@@ -14,6 +14,8 @@ import { PageIntro, StatusBadge } from "../components/ui";
 import { formatIDR } from "../data";
 import type { CashAccount, LedgerRecord, PaymentInput } from "../types";
 import { LedgerRecordDetail } from "./LedgerRecordDetail";
+import { NewPayableModal } from "../components/NewPayableModal";
+import { EditPayableModal } from "../components/EditPayableModal";
 
 type LedgerType = "AR" | "AP";
 
@@ -22,12 +24,18 @@ export function LedgerView({
   rows,
   accounts,
   recordPayment,
+  onAddRecord,
+  onUpdateRecord,
 }: {
   type: LedgerType;
   rows: LedgerRecord[];
   accounts: CashAccount[];
   recordPayment: (type: LedgerType, target: LedgerRecord, payment: PaymentInput) => void;
+  onAddRecord?: (newRecord: LedgerRecord) => void;
+  onUpdateRecord?: (updatedRecord: LedgerRecord) => void;
 }) {
+  const [newPayableOpen, setNewPayableOpen] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<LedgerRecord | null>(null);
   const [selectedRef, setSelectedRef] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [projectFilter, setProjectFilter] = useState("All");
@@ -191,16 +199,6 @@ export function LedgerView({
             ? "Pantau piutang outstanding per klien dan proyek."
             : "Pantau hutang outstanding per vendor dan proyek."
         }
-        action={
-          <button
-            className="primary-button"
-            onClick={() => alert(`Buat ${isAR ? "piutang" : "hutang"} baru...`)}
-            type="button"
-          >
-            <HugeiconsIcon icon={Invoice01Icon} size={18} strokeWidth={1.8} />
-            <span>{isAR ? "New Receivable" : "New Payable"}</span>
-          </button>
-        }
       />
 
       <section className="mini-kpi-grid" aria-label="Ringkasan Buku Pembantu">
@@ -286,7 +284,7 @@ export function LedgerView({
           columns={columns}
           visibleColumns={visibleColumns}
           onToggleColumn={handleToggleColumn}
-          onAddNew={() => alert(`Buat ${isAR ? "Piutang" : "Hutang"} baru...`)}
+          onAddNew={() => setNewPayableOpen(true)}
           addNewLabel={isAR ? "New Receivable" : "New Payable"}
         />
 
@@ -407,7 +405,7 @@ export function LedgerView({
                       <td style={{ textAlign: "center" }}>
                         <RowActionMenu
                           onView={() => setSelectedRef(row.ref)}
-                          onEdit={() => alert(`Edit catatan ${row.ref}`)}
+                          onEdit={() => setEditingRecord(row)}
                           onDelete={() => alert(`Hapus catatan ${row.ref}`)}
                         />
                       </td>
@@ -419,6 +417,29 @@ export function LedgerView({
           </table>
         </div>
       </article>
+
+      {newPayableOpen && (
+        <NewPayableModal
+          close={() => setNewPayableOpen(false)}
+          submit={(record) => {
+            onAddRecord?.(record);
+          }}
+          projectsList={projects}
+          existingVendors={Array.from(new Set(rows.map((r) => r.party)))}
+        />
+      )}
+
+      {editingRecord && (
+        <EditPayableModal
+          record={editingRecord}
+          close={() => setEditingRecord(null)}
+          submit={(updated) => {
+            onUpdateRecord?.(updated);
+          }}
+          projectsList={projects}
+          existingVendors={Array.from(new Set(rows.map((r) => r.party)))}
+        />
+      )}
     </>
   );
 }

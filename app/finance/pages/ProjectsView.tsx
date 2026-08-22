@@ -36,7 +36,17 @@ const compactIDR = (amount: number) => {
   return `Rp ${(amount / 1_000_000).toLocaleString("id-ID", { maximumFractionDigits: 1 })} Jt`;
 };
 
-export function ProjectsView({ openProject }: { openProject: (project: Project) => void }) {
+export function ProjectsView({
+  projects = projectRows,
+  openProject,
+  onAddNewProject,
+  onEditProject,
+}: {
+  projects?: Project[];
+  openProject: (project: Project) => void;
+  onAddNewProject?: () => void;
+  onEditProject?: (project: Project) => void;
+}) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [client, setClient] = useState("All");
@@ -55,9 +65,9 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
     "status",
   ]);
 
-  const activeProjects = projectRows.filter((project) => project.status === "ACTIVE");
-  const combinedRevenue = projectRows.reduce((sum, project) => sum + project.revenue, 0);
-  const combinedProfit = projectRows.reduce(
+  const activeProjects = projects.filter((project) => project.status === "ACTIVE");
+  const combinedRevenue = projects.reduce((sum, project) => sum + project.revenue, 0);
+  const combinedProfit = projects.reduce(
     (sum, project) => sum + project.revenue - project.expense,
     0,
   );
@@ -65,8 +75,8 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
   const averageMargin = Math.round((combinedProfit / (combinedRevenue || 1)) * 1000) / 10;
 
   const clients = useMemo(
-    () => Array.from(new Set(projectRows.map((p) => p.client))),
-    [],
+    () => Array.from(new Set(projects.map((p) => p.client))),
+    [projects],
   );
 
   const filterGroups = useMemo(
@@ -110,7 +120,7 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
   ];
 
   const rows = useMemo(() => {
-    let result = [...projectRows];
+    let result = [...projects];
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -242,15 +252,6 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
       <PageIntro
         title="Projects"
         description="Kelola dan pantau performa seluruh proyek portofolio perusahaan."
-        action={
-          <button
-            className="primary-button"
-            onClick={() => alert("Membuka form penambahan proyek baru...")}
-            type="button"
-          >
-            + Add Project
-          </button>
-        }
       />
 
       <section className="projects-summary-grid" aria-label="Ringkasan proyek">
@@ -307,7 +308,7 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
           columns={columns}
           visibleColumns={visibleColumns}
           onToggleColumn={handleToggleColumn}
-          onAddNew={() => alert("Tambah proyek baru...")}
+          onAddNew={onAddNewProject}
           addNewLabel="Add Project"
           extraActions={
             <div className="projects-view-toggle" aria-label="Project view mode">
@@ -429,7 +430,7 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
                       <td className="col-actions">
                         <RowActionMenu
                           onView={() => openProject(project)}
-                          onEdit={() => alert(`Edit proyek ${project.name}`)}
+                          onEdit={() => onEditProject?.(project)}
                           onDelete={() => alert(`Hapus proyek ${project.name}`)}
                         />
                       </td>
@@ -476,8 +477,15 @@ export function ProjectsView({ openProject }: { openProject: (project: Project) 
                         {project.code} · {project.client}
                       </span>
                     </div>
-                    <div className="project-card-badge">
+                    <div className="project-card-badge" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <StatusBadge status={project.status} />
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <RowActionMenu
+                          onView={() => openProject(project)}
+                          onEdit={() => onEditProject?.(project)}
+                          onDelete={() => alert(`Hapus proyek ${project.name}`)}
+                        />
+                      </div>
                     </div>
                   </div>
 

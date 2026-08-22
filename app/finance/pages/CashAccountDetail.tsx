@@ -32,11 +32,15 @@ export function CashAccountDetail({
   transactions,
   transfer,
   back,
+  onEditTransaction,
+  onSelectTransaction,
 }: {
   account: CashAccount;
   transactions: Transaction[];
   transfer: () => void;
   back: () => void;
+  onEditTransaction?: (tx: Transaction) => void;
+  onSelectTransaction?: (tx: Transaction) => void;
 }) {
   const [tab, setTab] = useState<"Overview" | "Transactions" | "Ledger" | "Reconciliation">("Overview");
   const [searchQuery, setSearchQuery] = useState("");
@@ -621,8 +625,8 @@ export function CashAccountDetail({
                         )}
                         <td style={{ textAlign: "center" }}>
                           <RowActionMenu
-                            onView={() => alert(`Lihat rincian transaksi ${tx.id}`)}
-                            onEdit={() => alert(`Edit transaksi ${tx.id}`)}
+                            onView={() => onSelectTransaction?.(tx)}
+                            onEdit={() => onEditTransaction?.(tx)}
                             onDelete={() => alert(`Hapus transaksi ${tx.id}`)}
                           />
                         </td>

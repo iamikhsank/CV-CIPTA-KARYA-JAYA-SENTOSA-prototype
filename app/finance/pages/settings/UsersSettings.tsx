@@ -6,9 +6,9 @@ import PlusSignIcon from "@hugeicons/core-free-icons/PlusSignIcon";
 import { StatusBadge } from "../../components/ui";
 
 const users = [
-  { initials: "JI", name: "Jason Ibrahim", email: "jason@ckjs.co.id", role: "Owner / Director", status: "ACTIVE", tone: "blue" },
-  { initials: "CO", name: "Co-Owner CKJS", email: "owner2@ckjs.co.id", role: "Owner / Director", status: "ACTIVE", tone: "green" },
-  { initials: "FA", name: "Finance Admin", email: "finance.admin@ckjs.co.id", role: "Finance / Admin", status: "INVITED", tone: "purple" },
+  { initials: "JI", name: "Jason Ibrahim", email: "jason@ciptakaryajaya.co.id", role: "Owner / Director", status: "ACTIVE", tone: "blue" },
+  { initials: "CO", name: "Co-Owner Sentosa", email: "owner2@ciptakaryajaya.co.id", role: "Owner / Director", status: "ACTIVE", tone: "green" },
+  { initials: "FA", name: "Finance Admin", email: "finance.admin@ciptakaryajaya.co.id", role: "Finance / Admin", status: "INVITED", tone: "purple" },
 ];
 
 export function UsersSettings({ notify }: { notify: (message: string) => void }) {
@@ -27,7 +27,7 @@ export function UsersSettings({ notify }: { notify: (message: string) => void })
       </section>
 
       <section className="settings-block user-management-list">
-        <div className="settings-block-title"><h3>Team members</h3><p>Pengguna yang memiliki atau sedang menunggu akses ke CKJS Finance.</p></div>
+        <div className="settings-block-title"><h3>Team members</h3><p>Pengguna yang memiliki atau sedang menunggu akses ke sistem keuangan.</p></div>
         {users.map((user) => (
           <article key={user.email}>
             <div className={`settings-avatar ${user.tone}`}>{user.initials}</div>

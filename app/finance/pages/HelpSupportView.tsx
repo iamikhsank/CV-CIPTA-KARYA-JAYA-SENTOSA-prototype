@@ -27,7 +27,7 @@ const categories = [
 ] as const;
 
 const faqs: Array<{ category: Exclude<SupportCategory, "All">; question: string; answer: string }> = [
-  { category: "Getting Started", question: "Bagaimana memulai pencatatan keuangan CKJS?", answer: "Lengkapi profil perusahaan, buat proyek aktif, lalu periksa Chart of Accounts dan pos kas. Setelah itu transaksi dapat dicatat dari tombol New Transaction di dashboard." },
+  { category: "Getting Started", question: "Bagaimana memulai pencatatan keuangan CV. Cipta Karya Jaya Sentosa?", answer: "Lengkapi profil perusahaan, buat proyek aktif, lalu periksa Chart of Accounts dan pos kas. Setelah itu transaksi dapat dicatat dari tombol New Transaction di dashboard." },
   { category: "Transactions", question: "Apa perbedaan Draft, Posted, dan Reversed?", answer: "Draft masih dapat diedit dan belum memengaruhi laporan. Posted sudah masuk ke buku besar. Reversed mempertahankan audit trail dengan membuat jurnal pembalik, bukan menghapus transaksi lama." },
   { category: "Transactions", question: "Bagaimana memperbaiki transaksi yang sudah diposting?", answer: "Buka detail transaksi, pilih Reverse Transaction, lalu buat transaksi pengganti dengan nilai yang benar. Cara ini menjaga jejak audit tetap lengkap." },
   { category: "Cash & Payments", question: "Apakah transfer antar pos kas memengaruhi laba rugi?", answer: "Tidak. Transfer hanya memindahkan saldo antar akun kas. Total aset likuid dan nilai laba rugi tidak berubah." },
@@ -61,12 +61,12 @@ export function HelpSupportView({ notify }: { notify: (message: string) => void 
     <>
       <PageIntro
         title="Help & Support"
-        description="Temukan panduan penggunaan atau hubungi tim support CKJS Finance."
+        description="Temukan panduan penggunaan atau hubungi tim support CV. Cipta Karya Jaya Sentosa."
         action={<button className="primary-button" onClick={() => setRequestOpen(true)} type="button"><HugeiconsIcon icon={CustomerSupportIcon} size={16} strokeWidth={1.8} /> New support request</button>}
       />
 
       <section className="support-hero">
-        <div className="support-hero-copy"><span>CKJS KNOWLEDGE BASE</span><h2>How can we help?</h2><p>Cari jawaban untuk transaksi, pembayaran, laporan, dan pengaturan sistem.</p></div>
+        <div className="support-hero-copy"><span>PUSAT PANDUAN & BANTUAN</span><h2>How can we help?</h2><p>Cari jawaban untuk transaksi, pembayaran, laporan, dan pengaturan sistem.</p></div>
         <label className="support-search"><HugeiconsIcon icon={Search01Icon} size={19} strokeWidth={1.8} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search help articles..." aria-label="Search help articles" /><kbd>⌘ K</kbd></label>
       </section>
 
@@ -108,7 +108,7 @@ export function HelpSupportView({ notify }: { notify: (message: string) => void 
           <section className="panel support-contact-card">
             <i className="support-card-icon"><HugeiconsIcon icon={CustomerSupportIcon} size={23} strokeWidth={1.7} /></i>
             <h2>Need direct assistance?</h2><p>Tim support tersedia untuk masalah operasional dan kendala pada data keuangan.</p>
-            <div className="support-channel"><HugeiconsIcon icon={Mail01Icon} size={17} strokeWidth={1.8} /><span><small>Email</small><b>support@ckjs.co.id</b></span></div>
+            <div className="support-channel"><HugeiconsIcon icon={Mail01Icon} size={17} strokeWidth={1.8} /><span><small>Email</small><b>support@ciptakaryajaya.co.id</b></span></div>
             <div className="support-channel"><HugeiconsIcon icon={CallIcon} size={17} strokeWidth={1.8} /><span><small>Phone</small><b>+62 812 3456 7890</b></span></div>
             <div className="support-channel"><HugeiconsIcon icon={Clock01Icon} size={17} strokeWidth={1.8} /><span><small>Business hours</small><b>Mon–Fri, 08:00–17:00 WITA</b></span></div>
             <button className="secondary-button support-contact-action" onClick={() => setRequestOpen(true)} type="button">Contact support <HugeiconsIcon icon={ArrowRight01Icon} size={15} strokeWidth={1.8} /></button>
@@ -116,7 +116,7 @@ export function HelpSupportView({ notify }: { notify: (message: string) => void 
 
           <section className="panel support-status-card">
             <div><HugeiconsIcon icon={CheckmarkCircle02Icon} size={20} strokeWidth={1.9} /><span><b>All systems operational</b><small>Last checked just now</small></span></div>
-            <button className="text-button" onClick={() => notify("Semua layanan CKJS Finance beroperasi normal.")} type="button">View status</button>
+            <button className="text-button" onClick={() => notify("Semua layanan sistem keuangan beroperasi normal.")} type="button">View status</button>
           </section>
         </aside>
       </div>

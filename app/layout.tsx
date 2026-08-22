@@ -5,20 +5,20 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "CKJS Finance — Multi-Project Cashflow",
+  title: "CV. Cipta Karya Jaya Sentosa — Multi-Project Financial Management",
   description: "Sistem cashflow dan pengelolaan keuangan multi-project untuk CV. Cipta Karya Jaya Sentosa.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "CKJS Finance",
+    title: "CV. Cipta Karya Jaya Sentosa",
     description: "Multi-Project Cashflow & Financial Management",
-    images: [{ url: "/og.png", width: 1680, height: 945, alt: "CKJS Finance dashboard" }],
+    images: [{ url: "/og.png", width: 1680, height: 945, alt: "CV. Cipta Karya Jaya Sentosa dashboard" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CKJS Finance",
+    title: "CV. Cipta Karya Jaya Sentosa",
     description: "Multi-Project Cashflow & Financial Management",
     images: ["/og.png"],
   },

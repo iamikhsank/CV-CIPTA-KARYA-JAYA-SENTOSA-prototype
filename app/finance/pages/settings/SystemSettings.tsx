@@ -81,7 +81,7 @@ export function SystemSettings({
         <div><span><b>Automatic session timeout</b><small>Keluar otomatis setelah 30 menit tidak aktif.</small></span><SettingToggle defaultChecked label="Automatic session timeout" onChange={onChange} /></div>
       </section>
 
-      <section className="settings-about"><span><b>CKJS Finance</b><small>Version 1.0 · Production-ready prototype</small></span><span>Last updated 21 Aug 2026</span></section>
+      <section className="settings-about"><span><b>Cipta Karya Jaya Sentosa</b><small>Version 1.0 · Financial Management System</small></span><span>Last updated 21 Aug 2026</span></section>
     </>
   );
 }

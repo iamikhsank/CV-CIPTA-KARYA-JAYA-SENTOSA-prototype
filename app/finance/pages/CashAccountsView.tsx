@@ -30,10 +30,14 @@ export function CashAccountsView({
   accounts,
   transactions,
   transfer,
+  onEditTransaction,
+  onSelectTransaction,
 }: {
   accounts: CashAccount[];
   transactions: Transaction[];
   transfer: () => void;
+  onEditTransaction?: (tx: Transaction) => void;
+  onSelectTransaction?: (tx: Transaction) => void;
 }) {
   const [selectedAccount, setSelectedAccount] = useState<CashAccount | null>(null);
   const [accountType, setAccountType] = useState("All");
@@ -57,6 +61,8 @@ export function CashAccountsView({
         transactions={transactions}
         transfer={transfer}
         back={() => setSelectedAccount(null)}
+        onEditTransaction={onEditTransaction}
+        onSelectTransaction={onSelectTransaction}
       />
     );
   }

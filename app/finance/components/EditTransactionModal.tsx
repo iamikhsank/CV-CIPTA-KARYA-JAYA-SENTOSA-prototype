@@ -150,29 +150,30 @@ function isSubledgerCreditContact(contactName: string): boolean {
   );
 }
 
-export function NewTransactionModal({
+export function EditTransactionModal({
+  transaction,
   close,
   submit,
   projectsList,
 }: {
+  transaction: Transaction;
   close: () => void;
-  submit: (tx: Omit<Transaction, "id" | "date">, post: boolean) => void;
+  submit: (updatedTx: Transaction, post: boolean) => void;
   projectsList?: string[];
 }) {
   const availableProjects = projectsList && projectsList.length > 0 ? projectsList : projectOptions;
-  const [type, setType] = useState<"Income" | "Expense" | "Transfer">("Expense");
-  const [scope, setScope] = useState<"Project" | "Corporate">("Project");
-  const [project, setProject] = useState(availableProjects[0] || "Hotel Gamelan");
-  const [category, setCategory] = useState("5-2104 BESI BETON, Wmesh & Bondek");
-  const [account, setAccount] = useState("1-1400 Rekening Giro Anton");
-  const [contact, setContact] = useState('H002 - "SATRIA Leveransir" (Hutang Vendor)');
-  const [description, setDescription] = useState("Pembelian Besi Beton Proyek Gamelan");
-  const [amount, setAmount] = useState(10000000);
-  const [txDate, setTxDate] = useState("2026-08-20");
-  const [materialVolume, setMaterialVolume] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [referenceNo, setReferenceNo] = useState("");
-  const [notes, setNotes] = useState("");
+  const [type, setType] = useState<"Income" | "Expense" | "Transfer">(transaction.type);
+  const [scope, setScope] = useState<"Project" | "Corporate">(transaction.project === "Corporate" ? "Corporate" : "Project");
+  const [project, setProject] = useState(transaction.project && transaction.project !== "Corporate" ? transaction.project : availableProjects[0]);
+  const [category, setCategory] = useState(transaction.category);
+  const [account, setAccount] = useState(transaction.account);
+  const [contact, setContact] = useState(transaction.contact || "");
+  const [description, setDescription] = useState(transaction.description);
+  const [amount, setAmount] = useState(transaction.amount);
+  const [materialVolume, setMaterialVolume] = useState(transaction.materialVolume || "");
+  const [dueDate, setDueDate] = useState(transaction.dueDate || "");
+  const [referenceNo, setReferenceNo] = useState(transaction.referenceNo || "");
+  const [notes, setNotes] = useState(transaction.notes || "");
 
   const scopeId = useId();
   const projectId = useId();
@@ -181,7 +182,6 @@ export function NewTransactionModal({
   const contactId = useId();
   const descId = useId();
   const amountId = useId();
-  const dateId = useId();
   const volumeId = useId();
   const dueDateId = useId();
   const refId = useId();
@@ -197,33 +197,32 @@ export function NewTransactionModal({
 
   const handleSend = (post: boolean) => {
     if (!valid) return;
-    submit(
-      {
-        type,
-        project: scope === "Corporate" ? "Corporate" : project,
-        category,
-        account,
-        contact,
-        description,
-        amount,
-        status: post ? "POSTED" : "DRAFT",
-        materialVolume: isMaterial && materialVolume.trim() ? materialVolume.trim() : undefined,
-        dueDate: dueDate ? dueDate : undefined,
-        referenceNo: referenceNo.trim() ? referenceNo.trim() : undefined,
-        notes: notes.trim() ? notes.trim() : undefined,
-      },
-      post
-    );
+    const updated: Transaction = {
+      ...transaction,
+      type,
+      project: scope === "Corporate" ? "Corporate" : project,
+      category,
+      account,
+      contact: contact.trim() || "—",
+      description: description.trim(),
+      amount: Number(amount) || 0,
+      status: post ? "POSTED" : transaction.status === "REVERSED" ? "REVERSED" : "DRAFT",
+      materialVolume: isMaterial && materialVolume.trim() ? materialVolume.trim() : undefined,
+      dueDate: dueDate ? dueDate : undefined,
+      referenceNo: referenceNo.trim() ? referenceNo.trim() : undefined,
+      notes: notes.trim() ? notes.trim() : undefined,
+    };
+    submit(updated, post);
   };
 
   return (
-    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="edit-tx-modal-title">
       <div className="modal-card transaction-modal">
         <div className="modal-head">
           <div>
-            <span className="eyebrow">NEW TRANSACTION</span>
-            <h2 id="modal-title">Record Financial Transaction</h2>
-            <p>Pencatatan transaksi akuntansi proyek sesuai standar buku besar CV. Cipta Karya Jaya Sentosa.</p>
+            <span className="eyebrow">EDIT TRANSACTION · {transaction.id}</span>
+            <h2 id="edit-tx-modal-title">Pembaruan Jurnal Transaksi</h2>
+            <p>Perbarui rincian rekening sumber, alokasi beban/pendapatan, rekanan, dan nilai transaksi.</p>
           </div>
           <button onClick={close} aria-label="Tutup modal" type="button">
             <HugeiconsIcon icon={Cancel01Icon} size={18} strokeWidth={2} />
@@ -261,7 +260,7 @@ export function NewTransactionModal({
                   />
                 </i>
                 <span>
-                  <b>{item === "Income" ? "Pemasukan (Income)" : item === "Expense" ? "Pengeluaran (Expense)" : "Transfer Dana"}</b>
+                  <b>{item === "Income" ? "Penerimaan (Income)" : item === "Expense" ? "Pengeluaran (Expense)" : "Transfer Kas"}</b>
                   <small>
                     {item === "Income"
                       ? "Penerimaan termin klien / pendapatan"
@@ -276,98 +275,156 @@ export function NewTransactionModal({
         </div>
 
         <div className="modal-body">
+          {/* Left Column: Input Form */}
           <div className="form-section">
             <div className="form-grid">
-              <fieldset className="full allocation-field">
-                <legend id={scopeId}>Alokasi Beban / Ruang Lingkup</legend>
-                <div className="segmented" role="group" aria-labelledby={scopeId}>
-                  <button
-                    className={scope === "Project" ? "active" : ""}
-                    onClick={() => setScope("Project")}
-                    type="button"
-                  >
-                    Project Context (Beban Proyek)
-                  </button>
-                  <button
-                    className={scope === "Corporate" ? "active" : ""}
-                    onClick={() => setScope("Corporate")}
-                    type="button"
-                  >
-                    Corporate / Kantor Pusat
-                  </button>
-                </div>
-              </fieldset>
+              <label htmlFor={scopeId}>
+                <span className="field-label-text">
+                  <span>Alokasi Entitas</span>
+                </span>
+                <select
+                  id={scopeId}
+                  value={scope}
+                  onChange={(e) => setScope(e.target.value as "Project" | "Corporate")}
+                >
+                  <option value="Project">Biaya / Termin Proyek</option>
+                  <option value="Corporate">Beban Umum Kantor (Corporate)</option>
+                </select>
+              </label>
 
-              {scope === "Project" && (
+              {scope === "Project" ? (
                 <label htmlFor={projectId}>
-                  <span className="field-label-text">Proyek</span>
-                  <select id={projectId} value={project} onChange={(e) => setProject(e.target.value)}>
-                    {availableProjects.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
+                  <span className="field-label-text">
+                    <span>Nama Proyek</span>
+                  </span>
+                  <select
+                    id={projectId}
+                    value={project}
+                    onChange={(e) => setProject(e.target.value)}
+                  >
+                    {availableProjects.map((name) => (
+                      <option key={name} value={name}>
+                        {name}
                       </option>
                     ))}
                   </select>
                 </label>
+              ) : (
+                <label>
+                  <span className="field-label-text">Alokasi Biaya</span>
+                  <input value="Kantor Pusat Sentosa" disabled style={{ background: "#f8fafc" }} />
+                </label>
               )}
 
-              <label htmlFor={categoryId} className={scope === "Corporate" ? "full" : ""}>
-                <span className="field-label-text">
-                  {type === "Income" ? "Kategori Pendapatan (COA)" : "Kategori Beban (COA 5xxx / 6xxx)"}
-                </span>
-                <select id={categoryId} value={category} onChange={(e) => setCategory(e.target.value)}>
-                  {(type === "Income" ? incomeCategories : expenseCategories).map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
               <label htmlFor={accountId}>
-                <span className="field-label-text">Pos Rekening Kas / Bank</span>
-                <select id={accountId} value={account} onChange={(e) => setAccount(e.target.value)}>
-                  {cashAccountOptions.map((acc) => (
-                    <option key={acc} value={acc}>
-                      {acc}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label htmlFor={contactId}>
                 <span className="field-label-text">
-                  {type === "Income" ? "Klien / Sumber Dana" : "Rekanan / Kode Bantu"}
+                  <span>Rekening Kas / Bank</span>
                 </span>
-                <select id={contactId} value={contact} onChange={(e) => setContact(e.target.value)}>
-                  {contactOptions.map((cnt) => (
-                    <option key={cnt} value={cnt}>
-                      {cnt}
+                <select
+                  id={accountId}
+                  value={account}
+                  onChange={(e) => setAccount(e.target.value)}
+                >
+                  {cashAccountOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
                     </option>
                   ))}
                 </select>
               </label>
 
-              {/* Volume Material Input */}
+              <label htmlFor={categoryId}>
+                <span className="field-label-text">
+                  <span>Kategori Akun (COA)</span>
+                </span>
+                <select
+                  id={categoryId}
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  {(type === "Income" ? incomeCategories : expenseCategories).map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label htmlFor={contactId} className="full">
+                <span className="field-label-text">
+                  <span>Kontak Rekanan / Vendor / Klien</span>
+                  {isCreditContact && <span className="field-hint">Kewajiban Tempo</span>}
+                </span>
+                <input
+                  id={contactId}
+                  list="edit-contact-suggestions"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  placeholder="Ketik kode (H00x, P00x) atau nama rekanan..."
+                />
+                <datalist id="edit-contact-suggestions">
+                  {contactOptions.map((opt) => (
+                    <option key={opt} value={opt} />
+                  ))}
+                </datalist>
+              </label>
+
+              <label htmlFor={descId} className="full">
+                <span className="field-label-text">Keterangan / Uraian Pekerjaan</span>
+                <input
+                  id={descId}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Contoh: Pembelian Besi Beton Ulir 12mm 50 Batang"
+                  required
+                />
+              </label>
+
+              <label htmlFor={amountId} className="full">
+                <span className="field-label-text">
+                  <span>Nominal Transaksi (IDR)</span>
+                </span>
+                <div className="currency-input-wrap">
+                  <span className="currency-prefix">Rp</span>
+                  <SmartCurrencyInput
+                    id={amountId}
+                    value={amount}
+                    onChange={setAmount}
+                    min={1}
+                  />
+                </div>
+              </label>
+
               {isMaterial && (
                 <label htmlFor={volumeId}>
                   <span className="field-label-text">
                     <span>Volume Material</span>
-                    <span className="field-hint">Spesifikasi Fisik</span>
+                    <span className="field-hint">Opname Fisik</span>
                   </span>
                   <input
                     id={volumeId}
-                    placeholder="Contoh: 125 m3, 450 btg, 200 sak"
                     value={materialVolume}
                     onChange={(e) => setMaterialVolume(e.target.value)}
+                    placeholder="Contoh: 12.5 m3 / 50 btg"
                   />
                 </label>
               )}
 
-              {/* Tanggal Jatuh Tempo Input */}
+              <label htmlFor={refId}>
+                <span className="field-label-text">
+                  <span>No. Faktur / Bukti Fisik</span>
+                </span>
+                <input
+                  id={refId}
+                  value={referenceNo}
+                  onChange={(e) => setReferenceNo(e.target.value)}
+                  placeholder="INV/2026/08/..."
+                />
+              </label>
+
               <label htmlFor={dueDateId}>
                 <span className="field-label-text">
-                  <span>Tanggal Jatuh Tempo</span>
+                  <span>Jatuh Tempo (Jika Tempo)</span>
                   {isCreditContact && <span className="field-hint">Termin Pembayaran</span>}
                 </span>
                 <input
@@ -378,78 +435,48 @@ export function NewTransactionModal({
                 />
               </label>
 
-              <label htmlFor={refId}>
-                <span className="field-label-text">No. Bukti / Invoice / Bilyet Giro</span>
-                <input
-                  id={refId}
-                  placeholder="Contoh: BKT-001, INV-2026/08/01"
-                  value={referenceNo}
-                  onChange={(e) => setReferenceNo(e.target.value)}
-                />
-              </label>
-
-              <label htmlFor={amountId}>
-                <span className="field-label-text">Nominal Transaksi</span>
-                <div className="currency-input-wrap">
-                  <span className="currency-prefix">Rp</span>
-                  <SmartCurrencyInput id={amountId} value={amount} onChange={setAmount} min={1} />
-                </div>
-              </label>
-
-              <label htmlFor={dateId}>
-                <span className="field-label-text">Tanggal Transaksi</span>
-                <input id={dateId} type="date" value={txDate} onChange={(e) => setTxDate(e.target.value)} />
-              </label>
-
-              <label htmlFor={descId} className="full">
-                <span className="field-label-text">Keterangan Transaksi</span>
-                <input
-                  id={descId}
-                  placeholder="Deskripsi ringkas mutasi keuangan..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </label>
-
               <label htmlFor={notesId} className="full">
-                <span className="field-label-text">Catatan Tambahan &amp; Memo (Opsional)</span>
-                <textarea
+                <span className="field-label-text">Catatan Internal Kasir / Site Manager</span>
+                <input
                   id={notesId}
-                  placeholder="Catatan rekonsiliasi audit internal..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  rows={2}
+                  placeholder="Catatan tambahan opname fisik atau kesepakatan pembayaran..."
                 />
               </label>
             </div>
           </div>
 
-          <aside className="journal-preview" aria-label="Pratinjau Jurnal Otomatis">
+          {/* Right Column: Double Entry Journal Preview */}
+          <aside className="journal-preview" aria-label="Pratinjau Jurnal Akuntansi">
             <div className="journal-head">
               <div>
                 <h3>Pratinjau Jurnal Berpasangan</h3>
                 <p>Pemetaan otomatis debit dan kredit standar pembukuan perusahaan</p>
               </div>
-              <span className={valid ? "balanced" : "unbalanced"}>
-                {valid ? "✓ SEIMBANG" : "PERIKSA INPUT"}
+              <span className="balanced">
+                <HugeiconsIcon icon={CheckmarkCircle02Icon} size={13} strokeWidth={2.2} />
+                DEBIT = KREDIT SEIMBANG
               </span>
             </div>
 
             <div className="journal-ledger-box">
               <div className="journal-row journal-header">
-                <span className="col-account">Akun Jurnal</span>
+                <span className="col-account">Akun Buku Besar</span>
                 <span className="col-amount">Debit</span>
                 <span className="col-amount">Kredit</span>
               </div>
+
+              {/* Debit Row */}
               <div className="journal-row debit-row">
                 <div className="account-cell">
                   <div className="account-meta">
                     <b className="account-name">{debitAccount}</b>
                     <small className="account-sub">
                       {type === "Expense"
-                        ? (scope === "Project" ? `Beban Proyek: ${project}` : "Beban Kantor / Corporate")
+                        ? (scope === "Project" ? `Alokasi Beban Proyek · ${project}` : "Beban Kantor / Corporate")
                         : type === "Income"
-                        ? `Penerimaan Kas • ${project}`
+                        ? `Penerimaan Kas · ${project}`
                         : "Rekening Kas Tujuan"}
                     </small>
                   </div>
@@ -457,6 +484,8 @@ export function NewTransactionModal({
                 <span className="col-amount debit-val">{formatIDR(amount)}</span>
                 <span className="col-amount muted-dash">—</span>
               </div>
+
+              {/* Credit Row */}
               <div className="journal-row credit-row">
                 <div className="account-cell credit-cell">
                   <TreeBranchCurve />
@@ -464,9 +493,9 @@ export function NewTransactionModal({
                     <b className="account-name">{creditAccount}</b>
                     <small className="account-sub">
                       {type === "Expense"
-                        ? `Pembayaran Kas • ${contact}`
+                        ? (isCreditContact ? `Kewajiban Tempo · ${contact}` : `Pembayaran Kas · ${account}`)
                         : type === "Income"
-                        ? `Pendapatan Termin • ${contact}`
+                        ? `Pendapatan Termin · ${category}`
                         : "Rekening Kas Asal"}
                     </small>
                   </div>
@@ -474,35 +503,33 @@ export function NewTransactionModal({
                 <span className="col-amount muted-dash">—</span>
                 <span className="col-amount credit-val">{formatIDR(amount)}</span>
               </div>
+
+              {/* Journal Balance Footer */}
               <div className="journal-row journal-footer">
                 <span className="col-account total-label">
-                  <b>Total Seimbang</b>
+                  <b>Total Keseimbangan Jurnal</b>
                 </span>
                 <span className="col-amount total-val">{formatIDR(amount)}</span>
                 <span className="col-amount total-val">{formatIDR(amount)}</span>
               </div>
             </div>
 
-            {(materialVolume || dueDate) && (
-              <div className="journal-metadata-summary">
-                {materialVolume && (
-                  <div className="meta-chip">
-                    <HugeiconsIcon icon={PackageIcon} size={14} strokeWidth={2} />
-                    <span>Vol: <b>{materialVolume}</b></span>
-                  </div>
-                )}
-                {dueDate && (
-                  <div className="meta-chip">
-                    <HugeiconsIcon icon={Calendar03Icon} size={14} strokeWidth={2} />
-                    <span>Tempo: <b>{dueDate}</b></span>
-                  </div>
-                )}
-              </div>
-            )}
-
+            {/* Audit Notes */}
             <div className="journal-audit-note">
               <HugeiconsIcon icon={InformationCircleIcon} size={16} strokeWidth={2} />
-              <span>Sistem secara otomatis mengkonstruksi jurnal <i>double-entry</i> yang seimbang dan siap audit.</span>
+              <span>
+                {isCreditContact ? (
+                  <>
+                    Transaksi mencatat <b>Kewajiban Tempo</b> pada kontak rekanan. Saldo buku pembantu
+                    akan tersinkronisasi otomatis pada modul <b>Hutang/Piutang</b>.
+                  </>
+                ) : (
+                  <>
+                    Transaksi tunai/bank langsung memotong saldo kas likuid <b>{account}</b> dan
+                    memperbarui laporan <b>Laba Rugi (P&amp;L)</b> proyek.
+                  </>
+                )}
+              </span>
             </div>
           </aside>
         </div>
@@ -511,12 +538,24 @@ export function NewTransactionModal({
           <button className="text-button" onClick={close} type="button">
             Batal
           </button>
-          <button className="secondary-button" disabled={!valid} onClick={() => handleSend(false)} type="button">
-            Simpan sebagai Draft
-          </button>
-          <button className="primary-button" disabled={!valid} onClick={() => handleSend(true)} type="button">
+          {transaction.status === "DRAFT" && (
+            <button
+              className="secondary-button"
+              disabled={!valid}
+              onClick={() => handleSend(false)}
+              type="button"
+            >
+              Simpan sebagai Draft
+            </button>
+          )}
+          <button
+            className="primary-button"
+            disabled={!valid}
+            onClick={() => handleSend(true)}
+            type="button"
+          >
             <HugeiconsIcon icon={CheckmarkCircle02Icon} size={16} strokeWidth={2.2} />
-            <span>Posting Transaksi</span>
+            <span>Perbarui &amp; Posting Transaksi</span>
           </button>
         </div>
       </div>

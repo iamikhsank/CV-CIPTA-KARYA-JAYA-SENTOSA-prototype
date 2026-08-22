@@ -18,6 +18,28 @@ import { formatIDR } from "../data";
 import type { Transaction } from "../types";
 import { StatusBadge } from "./ui";
 
+function TreeBranchCurve() {
+  return (
+    <svg
+      className="tree-branch-svg"
+      width="20"
+      height="24"
+      viewBox="0 0 20 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M3 0V9C3 13.4183 6.58172 17 11 17H18M18 17L13.5 12.5M18 17L13.5 21.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function transactionIcon(type: Transaction["type"]) {
   if (type === "Income") return ArrowUpRight01Icon;
   if (type === "Expense") return ArrowDownRight01Icon;
@@ -49,10 +71,12 @@ export function TransactionDetail({
   transaction,
   close,
   reverse,
+  onEdit,
 }: {
   transaction: Transaction;
   close: () => void;
   reverse: (tx: Transaction) => void;
+  onEdit?: (tx: Transaction) => void;
 }) {
   const journal = journalAccounts(transaction);
   const tone = transaction.type.toLowerCase();
@@ -165,7 +189,13 @@ export function TransactionDetail({
                 <strong>—</strong>
               </div>
               <div className="transaction-journal-row">
-                <span><b>{journal.credit.name}</b><small>{journal.credit.detail}</small></span>
+                <span className="credit-account-cell">
+                  <TreeBranchCurve />
+                  <div>
+                    <b>{journal.credit.name}</b>
+                    <small>{journal.credit.detail}</small>
+                  </div>
+                </span>
                 <strong>—</strong>
                 <strong>{formatIDR(transaction.amount)}</strong>
               </div>
@@ -192,7 +222,18 @@ export function TransactionDetail({
                 : "This transaction is still a draft and can be edited."}
           </p>
           <div>
-            {transaction.status === "DRAFT" && <button className="secondary-button" type="button">Edit Draft</button>}
+            {onEdit && transaction.status !== "REVERSED" && (
+              <button
+                className="secondary-button"
+                onClick={() => {
+                  close();
+                  onEdit(transaction);
+                }}
+                type="button"
+              >
+                {transaction.status === "DRAFT" ? "Edit Draft" : "Edit Transaksi"}
+              </button>
+            )}
             {transaction.status === "POSTED" && (
               <button className="transaction-reverse-button" onClick={() => reverse(transaction)} type="button">
                 <HugeiconsIcon icon={RotateClockwiseIcon} size={17} strokeWidth={1.9} />

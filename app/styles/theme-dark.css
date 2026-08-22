@@ -798,6 +798,207 @@ html[data-theme="dark"] .journal-metadata-summary > div {
   color: #94a3b8;
 }
 
+html[data-theme="dark"] .transaction-type {
+  background: #0d1725;
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .transaction-type .type-btn {
+  background: #142132;
+  border-color: #27384e;
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn:hover {
+  background: #1a2a3f;
+  border-color: #3b506b;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn b {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn small {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.income.active {
+  background: rgba(22, 139, 103, 0.15);
+  border-color: #168b67;
+  box-shadow: 0 0 0 1px #168b67;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.income.active b {
+  color: #34d399;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.expense.active {
+  background: rgba(225, 29, 72, 0.15);
+  border-color: #e11d48;
+  box-shadow: 0 0 0 1px #e11d48;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.expense.active b {
+  color: #fb7185;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.transfer.active {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+html[data-theme="dark"] .transaction-type .type-btn.transfer.active b {
+  color: #60a5fa;
+}
+
+html[data-theme="dark"] :is(
+  .transaction-modal .form-section,
+  .transaction-modal .journal-preview,
+  .new-project-form-fields,
+  .new-project-summary-panel,
+  .project-metric-card-box
+) {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .color-swatch-btn {
+  background: #111e30;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .color-swatch-btn.selected {
+  background: #19283c;
+  border-color: #38bdf8;
+}
+
+html[data-theme="dark"] .custom-color-reset-btn {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .custom-color-reset-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+html[data-theme="dark"] .summary-card-header h3,
+html[data-theme="dark"] .journal-head h3,
+html[data-theme="dark"] .field-label-text {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .project-financial-analysis-box {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .analysis-row {
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .analysis-row.header-row,
+html[data-theme="dark"] .analysis-row.footer-row {
+  background: #0d1725;
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .journal-ledger-box {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .journal-row.journal-header {
+  background: #0d1725;
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .journal-row.debit-row {
+  background: var(--surface);
+  border-color: #1a2a3f;
+}
+
+html[data-theme="dark"] .journal-row.credit-row {
+  background: #101c2c;
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .journal-row.debit-row .account-cell::after {
+  background-color: #3b506b;
+}
+
+html[data-theme="dark"] .journal-row.credit-row .account-cell::before {
+  border-color: #3b506b;
+}
+
+html[data-theme="dark"] .journal-row.journal-footer {
+  background: #0d1725;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .journal-footer .total-label,
+html[data-theme="dark"] .journal-footer .total-val {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .balanced {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+html[data-theme="dark"] .unbalanced {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .journal-audit-note {
+  background: rgba(47, 158, 91, 0.12);
+  border-color: rgba(47, 158, 91, 0.3);
+  color: #34d399;
+}
+
+html[data-theme="dark"] .journal-metadata-summary .meta-chip {
+  background: #111e30;
+  border-color: #27384e;
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .journal-metadata-summary .meta-chip b {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .pill-tag.material {
+  background: rgba(47, 158, 91, 0.16);
+  color: #4ade80;
+  border-color: rgba(47, 158, 91, 0.3);
+}
+
+html[data-theme="dark"] .pill-tag.tempo {
+  background: rgba(59, 130, 246, 0.16);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+html[data-theme="dark"] .pill-tag.neutral {
+  background: #111e30;
+  color: #94a3b8;
+  border-color: #27384e;
+}
+
+html[data-theme="dark"] .currency-input-wrap {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .currency-prefix {
+  background: #0d1725;
+  border-color: var(--line);
+  color: #94a3b8;
+}
+
 html[data-theme="dark"] :is(
   .ledger-action-callout:hover,
   .modal-close-btn:hover,
@@ -2078,8 +2279,9 @@ html[data-theme="dark"] .masters-table .selected-row {
   box-shadow: inset 3px 0 #6f95ff;
 }
 
+html[data-theme="dark"] code.cell-ref-id,
 html[data-theme="dark"] .masters-table code.cell-ref-id {
-  color: #91aac8;
+  color: #e2e8f0;
 }
 
 html[data-theme="dark"] .masters-table .type-pill {

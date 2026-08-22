@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { MasterEditModal, type MasterRecordData, type MasterRecordType } from "../components/MasterEditModal";
+import { NewMasterModal } from "../components/NewMasterModal";
 import {
   BulkSelectionBar,
   EntityAvatar,
@@ -9,6 +11,28 @@ import {
   TableToolbar,
 } from "../components/TableSuite";
 import { PageIntro, StatusBadge } from "../components/ui";
+
+const initialAccounts = [
+  ["1-1101", "Bank Operasional BCA", "ASSET", "Cash & Bank", "Corporate"],
+  ["1-1201", "Kas Proyek", "ASSET", "Petty Cash", "Project"],
+  ["4-1001", "Pendapatan Termin", "REVENUE", "Project Revenue", "Project"],
+  ["5-1101", "Biaya Material", "EXPENSE", "Direct Cost", "Project"],
+  ["6-1001", "Beban Kantor", "EXPENSE", "Corporate Expense", "Corporate"],
+];
+
+const initialContacts = [
+  ["PT Aruna Hospitality", "CLIENT", "Hotel Gamelan", "Rp 100.000.000"],
+  ["Nusantara Living", "CLIENT", "Villa Ubud", "Rp 120.000.000"],
+  ["UD Sinar Baja", "VENDOR", "Hotel Gamelan", "Rp 24.500.000"],
+  ["PT Beton Perkasa", "VENDOR", "Villa Ubud", "Rp 44.000.000"],
+];
+
+const initialCategories = [
+  ["Pendapatan Termin", "INCOME", "4-1001 · Pendapatan Termin", "Project"],
+  ["Biaya Material", "EXPENSE", "5-1101 · Biaya Material", "Project"],
+  ["Tenaga Kerja", "EXPENSE", "5-1201 · Tenaga Kerja", "Project"],
+  ["Beban Kantor", "EXPENSE", "6-1001 · Beban Kantor", "Corporate"],
+];
 
 export function MastersView({
   notify,
@@ -26,36 +50,41 @@ export function MastersView({
   const [density, setDensity] = useState<"compact" | "comfortable" | "spacious">("comfortable");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const accounts = useMemo(
-    () => [
-      ["1-1101", "Bank Operasional BCA", "ASSET", "Cash & Bank", "Corporate"],
-      ["1-1201", "Kas Proyek", "ASSET", "Petty Cash", "Project"],
-      ["4-1001", "Pendapatan Termin", "REVENUE", "Project Revenue", "Project"],
-      ["5-1101", "Biaya Material", "EXPENSE", "Direct Cost", "Project"],
-      ["6-1001", "Beban Kantor", "EXPENSE", "Corporate Expense", "Corporate"],
-    ],
-    [],
-  );
+  const [accounts, setAccounts] = useState<string[][]>(initialAccounts);
+  const [contacts, setContacts] = useState<string[][]>(initialContacts);
+  const [categories, setCategories] = useState<string[][]>(initialCategories);
+  const [editingMaster, setEditingMaster] = useState<MasterRecordData | null>(null);
+  const [newMasterType, setNewMasterType] = useState<MasterRecordType | null>(null);
 
-  const contacts = useMemo(
-    () => [
-      ["PT Aruna Hospitality", "CLIENT", "Hotel Gamelan", "Rp 100.000.000"],
-      ["Nusantara Living", "CLIENT", "Villa Ubud", "Rp 120.000.000"],
-      ["UD Sinar Baja", "VENDOR", "Hotel Gamelan", "Rp 24.500.000"],
-      ["PT Beton Perkasa", "VENDOR", "Villa Ubud", "Rp 44.000.000"],
-    ],
-    [],
-  );
+  const handleCreateMaster = (newRow: string[]) => {
+    if (!newMasterType) return;
+    if (newMasterType === "COA") {
+      setAccounts((prev) => [newRow, ...prev]);
+      notify(`Akun bagan ${newRow[1]} (${newRow[0]}) berhasil didaftarkan.`);
+    } else if (newMasterType === "CONTACT") {
+      setContacts((prev) => [newRow, ...prev]);
+      notify(`Rekanan baru ${newRow[0]} berhasil didaftarkan.`);
+    } else {
+      setCategories((prev) => [newRow, ...prev]);
+      notify(`Kategori transaksi ${newRow[0]} berhasil didaftarkan.`);
+    }
+    setNewMasterType(null);
+  };
 
-  const categories = useMemo(
-    () => [
-      ["Pendapatan Termin", "INCOME", "4-1001 · Pendapatan Termin", "Project"],
-      ["Biaya Material", "EXPENSE", "5-1101 · Biaya Material", "Project"],
-      ["Tenaga Kerja", "EXPENSE", "5-1201 · Tenaga Kerja", "Project"],
-      ["Beban Kantor", "EXPENSE", "6-1001 · Beban Kantor", "Corporate"],
-    ],
-    [],
-  );
+  const handleSaveMaster = (updatedRow: string[]) => {
+    if (!editingMaster) return;
+    if (editingMaster.type === "COA") {
+      setAccounts((prev) => prev.map((r) => (r[0] === updatedRow[0] ? updatedRow : r)));
+      notify(`Akun bagan ${updatedRow[1]} (${updatedRow[0]}) berhasil diperbarui.`);
+    } else if (editingMaster.type === "CONTACT") {
+      setContacts((prev) => prev.map((r) => (r[0] === editingMaster.row[0] ? updatedRow : r)));
+      notify(`Data rekanan ${updatedRow[0]} berhasil diperbarui.`);
+    } else {
+      setCategories((prev) => prev.map((r) => (r[0] === editingMaster.row[0] ? updatedRow : r)));
+      notify(`Kategori transaksi ${updatedRow[0]} berhasil diperbarui.`);
+    }
+    setEditingMaster(null);
+  };
 
   const activeTabList =
     tab === "Chart of Accounts"
@@ -98,20 +127,6 @@ export function MastersView({
       <PageIntro
         title="Master Data"
         description="Kelola akun bagan (COA), data rekanan kontak, dan kategori transaksi perusahaan."
-        action={
-          <button
-            className="primary-button"
-            onClick={() => notify(`Form tambah ${tab.toLowerCase()} dibuka.`)}
-            type="button"
-          >
-            <span>+</span> Add{" "}
-            {tab === "Chart of Accounts"
-              ? "Account"
-              : tab === "Contacts"
-              ? "Contact"
-              : "Category"}
-          </button>
-        }
       />
 
       {/* Segmented Tab Navigation with Vertical Dividers */}
@@ -166,7 +181,15 @@ export function MastersView({
           }}
           displayDensity={density}
           onDensityChange={setDensity}
-          onAddNew={() => notify(`Form tambah ${tab.toLowerCase()} dibuka.`)}
+          onAddNew={() => {
+            const t: MasterRecordType =
+              tab === "Chart of Accounts"
+                ? "COA"
+                : tab === "Contacts"
+                ? "CONTACT"
+                : "CATEGORY";
+            setNewMasterType(t);
+          }}
           addNewLabel={`Add ${tab === "Chart of Accounts" ? "Account" : tab === "Contacts" ? "Contact" : "Category"}`}
         />
 
@@ -267,8 +290,8 @@ export function MastersView({
                       </td>
                       <td style={{ textAlign: "center" }}>
                         <RowActionMenu
-                          onView={() => notify(`Rincian akun ${row[1]}`)}
-                          onEdit={() => notify(`Edit akun ${row[1]}`)}
+                          onView={() => notify(`Rincian akun ${row[1]} (${row[0]})`)}
+                          onEdit={() => setEditingMaster({ type: "COA", row })}
                           onDelete={() => notify(`Hapus akun ${row[1]}`)}
                         />
                       </td>
@@ -311,7 +334,7 @@ export function MastersView({
                       <td style={{ textAlign: "center" }}>
                         <RowActionMenu
                           onView={() => notify(`Rincian kontak ${row[0]}`)}
-                          onEdit={() => notify(`Edit kontak ${row[0]}`)}
+                          onEdit={() => setEditingMaster({ type: "CONTACT", row })}
                           onDelete={() => notify(`Hapus kontak ${row[0]}`)}
                         />
                       </td>
@@ -351,7 +374,7 @@ export function MastersView({
                       <td style={{ textAlign: "center" }}>
                         <RowActionMenu
                           onView={() => notify(`Rincian kategori ${row[0]}`)}
-                          onEdit={() => notify(`Edit kategori ${row[0]}`)}
+                          onEdit={() => setEditingMaster({ type: "CATEGORY", row })}
                           onDelete={() => notify(`Hapus kategori ${row[0]}`)}
                         />
                       </td>
@@ -363,6 +386,23 @@ export function MastersView({
           </table>
         </div>
       </article>
+
+      {newMasterType && (
+        <NewMasterModal
+          type={newMasterType}
+          close={() => setNewMasterType(null)}
+          submit={handleCreateMaster}
+          existingCodes={accounts.map((a) => a[0])}
+        />
+      )}
+
+      {editingMaster && (
+        <MasterEditModal
+          data={editingMaster}
+          close={() => setEditingMaster(null)}
+          submit={handleSaveMaster}
+        />
+      )}
     </>
   );
 }

@@ -20,6 +20,9 @@ import Settings01Icon from "@hugeicons/core-free-icons/Settings01Icon";
 import TransactionIcon from "@hugeicons/core-free-icons/TransactionIcon";
 import Upload01Icon from "@hugeicons/core-free-icons/Upload01Icon";
 import Wallet02Icon from "@hugeicons/core-free-icons/Wallet02Icon";
+import { EditProjectModal } from "./finance/components/EditProjectModal";
+import { EditTransactionModal } from "./finance/components/EditTransactionModal";
+import { NewProjectModal } from "./finance/components/NewProjectModal";
 import { NewTransactionModal } from "./finance/components/NewTransactionModal";
 import { TransactionDetail } from "./finance/components/TransactionDetail";
 import { TransferModal } from "./finance/components/TransferModal";
@@ -66,11 +69,15 @@ export function CKJSApp() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarProjectsOpen, setSidebarProjectsOpen] = useState(true);
   const [theme, setTheme] = useState<AppTheme>("light");
+  const [projects, setProjects] = useState<Project[]>(projectRows);
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [cashAccounts, setCashAccounts] = useState<CashAccount[]>(cashSeed);
   const [receivableRecords, setReceivableRecords] = useState<LedgerRecord[]>(receivables);
   const [payableRecords, setPayableRecords] = useState<LedgerRecord[]>(payables);
+  const [newProjectOpen, setNewProjectOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [newTxOpen, setNewTxOpen] = useState(false);
+  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -175,6 +182,29 @@ export function CKJSApp() {
     notify(post ? "Transaksi berhasil diposting dan jurnal sudah seimbang." : "Transaksi disimpan sebagai draft.");
   };
 
+  const updateTransaction = (updatedTx: Transaction, post: boolean) => {
+    setTransactions((items) => items.map((t) => (t.id === updatedTx.id ? updatedTx : t)));
+    if (selectedTx && selectedTx.id === updatedTx.id) {
+      setSelectedTx(updatedTx);
+    }
+    setEditingTx(null);
+    notify(post ? `Transaksi ${updatedTx.id} berhasil diperbarui dan diposting.` : `Draft transaksi ${updatedTx.id} berhasil diperbarui.`);
+  };
+
+  const createProject = (newProject: Project) => {
+    setProjects((items) => [newProject, ...items]);
+    notify(`Proyek ${newProject.name} (${newProject.code}) berhasil didaftarkan.`);
+  };
+
+  const updateProject = (updatedProject: Project) => {
+    setProjects((items) => items.map((p) => (p.code === updatedProject.code ? updatedProject : p)));
+    if (selectedProject && selectedProject.code === updatedProject.code) {
+      setSelectedProject(updatedProject);
+    }
+    setEditingProject(null);
+    notify(`Data proyek ${updatedProject.name} (${updatedProject.code}) berhasil diperbarui.`);
+  };
+
   const reverseTransaction = (target: Transaction) => {
     setTransactions((items) => items.map((item) => item.id === target.id ? { ...item, status: "REVERSED" } : item));
     setSelectedTx(null);
@@ -214,6 +244,30 @@ export function CKJSApp() {
     notify(`${type === "AR" ? "Penerimaan" : "Pembayaran"} ${target.ref} berhasil dicatat dan jurnal otomatis sudah diposting.`);
   };
 
+  const addPayableRecord = (newRecord: LedgerRecord) => {
+    setPayableRecords((prev) => [newRecord, ...prev]);
+    notify(`Tagihan ${newRecord.ref} (${newRecord.party}) berhasil didaftarkan ke Buku Hutang.`);
+  };
+
+  const addReceivableRecord = (newRecord: LedgerRecord) => {
+    setReceivableRecords((prev) => [newRecord, ...prev]);
+    notify(`Piutang ${newRecord.ref} (${newRecord.party}) berhasil didaftarkan ke Buku Piutang.`);
+  };
+
+  const updatePayableRecord = (updatedRecord: LedgerRecord) => {
+    setPayableRecords((prev) =>
+      prev.map((item) => (item.ref === updatedRecord.ref ? updatedRecord : item))
+    );
+    notify(`Perubahan tagihan hutang ${updatedRecord.ref} berhasil disimpan.`);
+  };
+
+  const updateReceivableRecord = (updatedRecord: LedgerRecord) => {
+    setReceivableRecords((prev) =>
+      prev.map((item) => (item.ref === updatedRecord.ref ? updatedRecord : item))
+    );
+    notify(`Perubahan piutang ${updatedRecord.ref} berhasil disimpan.`);
+  };
+
   if (!authenticated) return <LoginView onLogin={() => { setAuthenticated(true); setView("Dashboard"); }} />;
 
   return <main className="app-shell">
@@ -221,13 +275,17 @@ export function CKJSApp() {
       <div className="brand">
         <div className="brand-main">
           <div className="brand-logo-slot" title="Logo CV. Cipta Karya Jaya Sentosa">
-            <div className="brand-mark">
-              <span>CK</span>
+            <div className="brand-mark" style={{ borderRadius: "50%", overflow: "hidden" }}>
+              <img
+                src="/logo-ckjs.jpg"
+                alt="Logo CV. Cipta Karya Jaya Sentosa"
+                className="brand-logo-img"
+              />
             </div>
           </div>
           <div className="brand-copy">
-            <div className="brand-word">CKJS Finance</div>
-            <span>Financial Management</span>
+            <div className="brand-word">Financial Management</div>
+            <span>Cipta Karya Jaya Sentosa</span>
           </div>
         </div>
         {!sidebarCollapsed && (
@@ -260,14 +318,14 @@ export function CKJSApp() {
             >
               <HugeiconsIcon icon={ArrowDown01Icon} size={15} strokeWidth={2} />
             </button>
-            <button onClick={() => go("Projects")} aria-label="Tambah atau lihat proyek" title="Buka daftar proyek" type="button">
+            <button onClick={() => setNewProjectOpen(true)} aria-label="Tambah proyek baru" title="Daftarkan proyek baru" type="button">
               <HugeiconsIcon icon={PlusSignIcon} size={17} strokeWidth={2} />
             </button>
           </div>
         </div>
         {sidebarProjectsOpen && (
           <div className="sidebar-project-list">
-            {projectRows.slice(0, 5).map((project) => (
+            {projects.slice(0, 6).map((project) => (
               <button
                 className={`project-shortcut ${selectedProject?.name === project.name ? "active" : ""}`}
                 onClick={() => {
@@ -275,7 +333,7 @@ export function CKJSApp() {
                   setSelectedProject(project);
                   setSidebarOpen(false);
                 }}
-                key={project.name}
+                key={project.code}
                 type="button"
               >
                 <i style={{ background: project.color }} />
@@ -472,12 +530,35 @@ export function CKJSApp() {
             back={() => setSelectedProject(null)}
             newTransaction={() => setNewTxOpen(true)}
             selectTransaction={setSelectedTx}
+            onEditProject={(p) => setEditingProject(p)}
           />
-        ) : <ProjectsView openProject={setSelectedProject} />)}
-        {view === "Transactions" && <TransactionsView transactions={transactions} newTransaction={() => setNewTxOpen(true)} selectTransaction={setSelectedTx} />}
-        {view === "Cash Accounts" && <CashAccountsView accounts={cashAccounts} transactions={transactions} transfer={() => setTransferOpen(true)} />}
-        {view === "Receivables" && <LedgerView type="AR" rows={receivableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} />}
-        {view === "Payables" && <LedgerView type="AP" rows={payableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} />}
+        ) : (
+          <ProjectsView
+            projects={projects}
+            openProject={setSelectedProject}
+            onAddNewProject={() => setNewProjectOpen(true)}
+            onEditProject={(p) => setEditingProject(p)}
+          />
+        ))}
+        {view === "Transactions" && (
+          <TransactionsView
+            transactions={transactions}
+            newTransaction={() => setNewTxOpen(true)}
+            selectTransaction={setSelectedTx}
+            onEditTransaction={(tx) => setEditingTx(tx)}
+          />
+        )}
+        {view === "Cash Accounts" && (
+          <CashAccountsView
+            accounts={cashAccounts}
+            transactions={transactions}
+            transfer={() => setTransferOpen(true)}
+            onEditTransaction={(tx) => setEditingTx(tx)}
+            onSelectTransaction={setSelectedTx}
+          />
+        )}
+        {view === "Receivables" && <LedgerView type="AR" rows={receivableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} onAddRecord={addReceivableRecord} onUpdateRecord={updateReceivableRecord} />}
+        {view === "Payables" && <LedgerView type="AP" rows={payableRecords} accounts={cashAccounts} recordPayment={recordLedgerPayment} onAddRecord={addPayableRecord} onUpdateRecord={updatePayableRecord} />}
         {view === "Reports" && <ReportsView notify={notify} report={subPage} setReport={setSubPage} />}
         {view === "Masters" && <MastersView notify={notify} tab={subPage} setTab={setSubPage} />}
         {view === "Migration" && <MigrationView notify={notify} />}
@@ -487,9 +568,12 @@ export function CKJSApp() {
     </section>
 
     {sidebarOpen && <button className="overlay" onClick={() => setSidebarOpen(false)} aria-label="Tutup navigasi" type="button" />}
-    {newTxOpen && <NewTransactionModal close={() => setNewTxOpen(false)} submit={createTransaction} />}
+    {newProjectOpen && <NewProjectModal close={() => setNewProjectOpen(false)} submit={createProject} existingProjects={projects} />}
+    {editingProject && <EditProjectModal project={editingProject} close={() => setEditingProject(null)} submit={updateProject} existingProjects={projects} />}
+    {newTxOpen && <NewTransactionModal close={() => setNewTxOpen(false)} submit={createTransaction} projectsList={projects.map((p) => p.name)} />}
+    {editingTx && <EditTransactionModal transaction={editingTx} close={() => setEditingTx(null)} submit={updateTransaction} projectsList={projects.map((p) => p.name)} />}
     {transferOpen && <TransferModal accounts={cashAccounts} close={() => setTransferOpen(false)} submit={transferFunds} />}
-    {selectedTx && <TransactionDetail transaction={selectedTx} close={() => setSelectedTx(null)} reverse={reverseTransaction} />}
+    {selectedTx && <TransactionDetail transaction={selectedTx} close={() => setSelectedTx(null)} reverse={reverseTransaction} onEdit={(tx) => setEditingTx(tx)} />}
     {toast && <div className="toast"><i>✓</i>{toast}</div>}
   </main>;
 }

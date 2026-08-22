@@ -23,7 +23,9 @@ export function CompanySettings({
       </header>
 
       <section className="settings-block company-brand-block">
-        <div className="company-logo-preview">CK</div>
+        <div className="company-logo-preview" style={{ borderRadius: "50%", overflow: "hidden", border: "1.5px solid var(--line)" }}>
+          <img src="/logo-ckjs.jpg" alt="Logo Perusahaan" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+        </div>
         <div><h3>Company logo</h3><p>PNG atau JPG, maksimal 2 MB. Logo akan tampil pada laporan yang diekspor.</p><button className="secondary-button" type="button" onClick={() => notify("Pemilih logo perusahaan dibuka.")}><HugeiconsIcon icon={Upload01Icon} size={16} strokeWidth={1.8} /> Upload logo</button></div>
       </section>
 
@@ -31,10 +33,10 @@ export function CompanySettings({
         <div className="settings-block-title"><h3>Legal information</h3><p>Pastikan sesuai dengan dokumen legal perusahaan.</p></div>
         <div className="settings-form-grid">
           <label>Company name<input defaultValue="CV. Cipta Karya Jaya Sentosa" onChange={onChange} /></label>
-          <label>Trading name<input defaultValue="CKJS" onChange={onChange} /></label>
+          <label>Trading name<input defaultValue="Cipta Karya Jaya Sentosa" onChange={onChange} /></label>
           <label>Business type<select defaultValue="construction" onChange={onChange}><option value="construction">Construction & Contractor</option><option value="services">Professional Services</option></select></label>
           <label>NPWP<input defaultValue="—" placeholder="Masukkan NPWP perusahaan" onChange={onChange} /></label>
-          <label>Company email<input type="email" defaultValue="finance@ckjs.co.id" onChange={onChange} /></label>
+          <label>Company email<input type="email" defaultValue="finance@ciptakaryajaya.co.id" onChange={onChange} /></label>
           <label>Phone number<input defaultValue="+62 812 3456 7890" onChange={onChange} /></label>
           <label className="full">Registered address<textarea defaultValue="Denpasar, Bali, Indonesia" onChange={onChange} /></label>
         </div>

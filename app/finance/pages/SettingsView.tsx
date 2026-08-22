@@ -63,7 +63,7 @@ export function SettingsView({
     window.localStorage.setItem("ckjs-language", pendingLanguage);
     document.documentElement.lang = pendingLanguage;
     setDirty(false);
-    notify("Pengaturan CKJS Finance berhasil disimpan.");
+    notify("Pengaturan sistem keuangan berhasil disimpan.");
   };
 
   return (
@@ -77,7 +77,7 @@ export function SettingsView({
         <aside className="panel settings-navigation">
           <div className="settings-company-summary">
             <div className="settings-company-mark">CK</div>
-            <span><b>CKJS Finance</b><small>Workspace settings</small></span>
+            <span><b>Cipta Karya Jaya Sentosa</b><small>Workspace settings</small></span>
           </div>
           <nav aria-label="Settings navigation">
             {tabs.map((item) => (

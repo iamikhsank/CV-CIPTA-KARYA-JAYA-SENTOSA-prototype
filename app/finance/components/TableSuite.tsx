@@ -163,7 +163,7 @@ export function RowActionMenu({
               }}
               type="button"
             >
-              View Details
+              Lihat Rincian
             </button>
           )}
           {onEdit && (
@@ -174,7 +174,7 @@ export function RowActionMenu({
               }}
               type="button"
             >
-              Edit Record
+              Edit Data
             </button>
           )}
           {customActions?.map((item, idx) => (

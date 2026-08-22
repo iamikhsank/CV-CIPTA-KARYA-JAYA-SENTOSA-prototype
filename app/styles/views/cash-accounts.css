@@ -944,8 +944,12 @@
 }
 
 .cell-ref-id {
-  font-size: 10px;
-  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
 }
 
 .cell-desc {

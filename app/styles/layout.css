@@ -9,7 +9,7 @@
 .sidebar {
   position: fixed;
   inset: 0 auto 0 0;
-  width: 240px;
+  width: 284px;
   padding: 0 14px 16px;
   border: 0;
   border-right: 1px solid var(--line);
@@ -66,15 +66,15 @@
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
-  background: linear-gradient(145deg, var(--brand-deep), var(--brand-mid) 58%, var(--brand-bright));
+  border-radius: 50%;
+  background: #ffffff;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.5px;
-  border: 1px solid var(--brand-mid);
-  box-shadow: 0 5px 14px rgba(49, 89, 217, 0.18);
+  border: 1.5px solid var(--line, #e2e8f0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.15s ease;
 }
@@ -84,6 +84,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
   display: block;
 }
 
@@ -418,7 +419,7 @@
 
 /* Content Shell & Topbar */
 .content-shell {
-  margin-left: 240px;
+  margin-left: 284px;
   flex: 1;
   min-width: 0;
   transition: margin-left 0.25s ease;

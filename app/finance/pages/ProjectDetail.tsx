@@ -7,6 +7,7 @@ import Calendar03Icon from "@hugeicons/core-free-icons/Calendar03Icon";
 import Download04Icon from "@hugeicons/core-free-icons/Download04Icon";
 import MoneyReceive01Icon from "@hugeicons/core-free-icons/MoneyReceive01Icon";
 import MoneySend01Icon from "@hugeicons/core-free-icons/MoneySend01Icon";
+import PencilEdit02Icon from "@hugeicons/core-free-icons/PencilEdit02Icon";
 import PlusSignIcon from "@hugeicons/core-free-icons/PlusSignIcon";
 import Search01Icon from "@hugeicons/core-free-icons/Search01Icon";
 import TransactionIcon from "@hugeicons/core-free-icons/TransactionIcon";
@@ -21,12 +22,14 @@ export function ProjectDetail({
   back,
   newTransaction,
   selectTransaction,
+  onEditProject,
 }: {
   project: Project;
   transactions: Transaction[];
   back: () => void;
   newTransaction: () => void;
   selectTransaction: (transaction: Transaction) => void;
+  onEditProject?: (project: Project) => void;
 }) {
   const [tab, setTab] = useState("Overview");
   const [period, setPeriod] = useState("Agustus 2026");
@@ -92,12 +95,25 @@ export function ProjectDetail({
         <div className="project-monogram" style={{ background: project.color }}>
           {project.name.split(" ").map((word) => word[0]).join("")}
         </div>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <span className="eyebrow">{project.code}</span>
           <h1>{project.name}</h1>
           <p>{project.client} · {project.start} – {project.end}</p>
         </div>
-        <StatusBadge status={project.status} />
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <StatusBadge status={project.status} />
+          {onEditProject && (
+            <button
+              className="secondary-button"
+              onClick={() => onEditProject(project)}
+              type="button"
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px", height: "32px", fontSize: "12px", padding: "0 12px" }}
+            >
+              <HugeiconsIcon icon={PencilEdit02Icon} size={14} strokeWidth={2} />
+              <span>Edit Proyek</span>
+            </button>
+          )}
+        </div>
       </div>
       <div className="tabs">
         {["Overview", "Transactions", "Cash", "P&L", "Ledger"].map((item) => (
