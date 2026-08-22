@@ -9,8 +9,8 @@ import Login03Icon from "@hugeicons/core-free-icons/Login03Icon";
 import Mail01Icon from "@hugeicons/core-free-icons/Mail01Icon";
 
 export function LoginView({ onLogin }: { onLogin: () => void }) {
-  const [email, setEmail] = useState("jason@ciptakaryajaya.co.id");
-  const [password, setPassword] = useState("Admin2026");
+  const [email, setEmail] = useState("jason@ckjs.co.id");
+  const [password, setPassword] = useState("CKJS2026");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -34,8 +34,8 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
     <main className="login-shell">
       <section className="login-showcase">
         <div className="login-brand">
-          <div className="login-brand-logo">
-            <img src="/logo-ckjs.jpg" alt="Logo CV. Cipta Karya Jaya Sentosa" />
+          <div style={{ borderRadius: "50%", overflow: "hidden", width: "38px", height: "38px", display: "grid", placeItems: "center", background: "#fff", border: "1.5px solid rgba(255,255,255,0.2)" }}>
+            <img src="/logo-ckjs.jpg" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
           </div>
           <span>
             <b>Financial Management</b>
@@ -72,7 +72,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
             <HugeiconsIcon icon={Login03Icon} size={23} strokeWidth={1.8} />
           </div>
           <h2>Welcome back</h2>
-          <p>Masuk untuk melanjutkan ke dashboard keuangan CV. Cipta Karya Jaya Sentosa.</p>
+          <p>Masuk untuk melanjutkan ke dashboard keuangan CKJS.</p>
           <label>
             Email address
             <div className="login-input">
@@ -119,7 +119,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
             </label>
             <button
               onClick={() =>
-                setError("Silakan hubungi administrator CV. Cipta Karya Jaya Sentosa untuk reset password.")
+                setError("Silakan hubungi administrator CKJS untuk reset password.")
               }
               type="button"
             >
