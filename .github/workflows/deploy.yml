@@ -37,7 +37,7 @@ jobs:
       - name: Build static export for GitHub Pages
         run: npm run build:pages
         env:
-          BASE_PATH: /CV.-CIPTA-KARYA-JAYA-SENTOSA/
+          BASE_PATH: /CV-CIPTA-KARYA-JAYA-SENTOSA-prototype/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

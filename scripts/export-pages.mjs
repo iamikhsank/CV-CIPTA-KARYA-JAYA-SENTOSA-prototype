@@ -18,8 +18,34 @@ async function copyDir(src, dest) {
   }
 }
 
+async function patchFilesRecursively(dir, normalizedBasePath) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      await patchFilesRecursively(fullPath, normalizedBasePath);
+    } else if (
+      entry.isFile() &&
+      (entry.name.endsWith(".js") ||
+        entry.name.endsWith(".css") ||
+        entry.name.endsWith(".json"))
+    ) {
+      let content = await fs.readFile(fullPath, "utf-8");
+      let updated = content
+        .replaceAll('"/_next/', `"${normalizedBasePath}_next/`)
+        .replaceAll("'/_next/", `'${normalizedBasePath}_next/`)
+        .replaceAll('"/logo-ckjs.jpg"', `"${normalizedBasePath}logo-ckjs.jpg"`)
+        .replaceAll("'/logo-ckjs.jpg'", `'${normalizedBasePath}logo-ckjs.jpg'`);
+      if (content !== updated) {
+        await fs.writeFile(fullPath, updated, "utf-8");
+      }
+    }
+  }
+}
+
 async function exportForGitHubPages() {
-  const basePath = process.env.BASE_PATH || "/CV.-CIPTA-KARYA-JAYA-SENTOSA/";
+  const basePath =
+    process.env.BASE_PATH || "/CV-CIPTA-KARYA-JAYA-SENTOSA-prototype/";
   const normalizedBasePath = basePath.endsWith("/") ? basePath : `${basePath}/`;
   const rootDir = process.cwd();
   const distDir = path.join(rootDir, "dist");
@@ -66,6 +92,8 @@ async function exportForGitHubPages() {
     .replaceAll('href="/favicon.svg"', `href="${normalizedBasePath}favicon.svg"`)
     .replaceAll('href="/og.png"', `href="${normalizedBasePath}og.png"`)
     .replaceAll('content="http://localhost:3000/og.png"', `content="https://iamikhsank.github.io${normalizedBasePath}og.png"`)
+    .replaceAll('src="/logo-ckjs.jpg"', `src="${normalizedBasePath}logo-ckjs.jpg"`)
+    .replaceAll('"/logo-ckjs.jpg"', `"${normalizedBasePath}logo-ckjs.jpg"`)
     .replaceAll('href="/file.svg"', `href="${normalizedBasePath}file.svg"`)
     .replaceAll('href="/globe.svg"', `href="${normalizedBasePath}globe.svg"`)
     .replaceAll('href="/window.svg"', `href="${normalizedBasePath}window.svg"`);
@@ -76,6 +104,9 @@ async function exportForGitHubPages() {
 
   // Create .nojekyll so GitHub Pages does not ignore _next folder
   await fs.writeFile(path.join(outDir, ".nojekyll"), "", "utf-8");
+
+  console.log("[export] Step 6: Patching client-side bundles with target base path...");
+  await patchFilesRecursively(outDir, normalizedBasePath);
 
   console.log("[export] Export complete! Static build generated in dist-pages/");
 }
